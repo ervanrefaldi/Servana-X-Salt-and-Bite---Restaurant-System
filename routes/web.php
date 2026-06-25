@@ -225,6 +225,18 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/financial-transactions/{financialTransaction}', [FinancialTransactionController::class, 'show'])
             ->name('financial-transactions.show');
+
+        Route::patch('/salary-payments/{salaryPayment}/attendance', [SalaryPaymentController::class, 'updateAttendance'])
+            ->name('salary-payments.attendance');
+
+        Route::patch('/salary-payments/{salaryPayment}/paid', [SalaryPaymentController::class, 'markAsPaid'])
+            ->name('salary-payments.paid');
+
+        Route::patch('/salary-payments/{salaryPayment}/unpaid', [SalaryPaymentController::class, 'markAsUnpaid'])
+            ->name('salary-payments.unpaid');
+
+        Route::patch('/stock-transactions/{stockTransaction}/status', [StockTransactionController::class, 'updateStatus'])
+            ->name('stock-transactions.updateStatus');
     });
 
 
@@ -256,9 +268,23 @@ Route::middleware(['auth'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+    | Admin, SDM, dan Keuangan — Lihat Gaji
+    |--------------------------------------------------------------------------
+    | Admin, SDM, dan keuangan dapat melihat data gaji karyawan.
+    | Hanya admin dan keuangan yang dapat mengelola pembayaran gaji.
+    */
+
+    Route::middleware(['role:admin,sdm,keuangan'])->group(function () {
+        Route::get('/salary-payments', [SalaryPaymentController::class, 'index'])
+            ->name('salary-payments.index');
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Admin dan SDM
     |--------------------------------------------------------------------------
-    | Admin dan SDM dapat mengelola data karyawan, akun staff, dan status gaji.
+    | Admin dan SDM dapat mengelola data karyawan dan akun staff.
     */
 
     Route::middleware(['role:admin,sdm'])->group(function () {
@@ -268,18 +294,6 @@ Route::middleware(['auth'])->group(function () {
             ->parameters([
                 'staff-accounts' => 'staffAccount',
             ]);
-
-        Route::get('/salary-payments', [SalaryPaymentController::class, 'index'])
-            ->name('salary-payments.index');
-
-        Route::patch('/salary-payments/{salaryPayment}/attendance', [SalaryPaymentController::class, 'updateAttendance'])
-            ->name('salary-payments.attendance');
-
-        Route::patch('/salary-payments/{salaryPayment}/paid', [SalaryPaymentController::class, 'markAsPaid'])
-            ->name('salary-payments.paid');
-
-        Route::patch('/salary-payments/{salaryPayment}/unpaid', [SalaryPaymentController::class, 'markAsUnpaid'])
-            ->name('salary-payments.unpaid');
     });
 });
 

@@ -47,6 +47,29 @@
                 </div>
 
                 <div class="mb-4">
+                    <p class="text-sm text-gray-500">Status</p>
+                    <p class="text-lg font-semibold">
+                        @if ($stockTransaction->status === 'pengajuan')
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-sm">
+                                Pengajuan
+                            </span>
+                        @elseif ($stockTransaction->status === 'cair')
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-sm">
+                                Cair
+                            </span>
+                        @elseif ($stockTransaction->status === 'ditolak')
+                            <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-sm">
+                                Ditolak
+                            </span>
+                        @else
+                            <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm">
+                                Selesai
+                            </span>
+                        @endif
+                    </p>
+                </div>
+
+                <div class="mb-4">
                     <p class="text-sm text-gray-500">Jumlah</p>
                     <p class="text-lg font-semibold">
                         {{ number_format($stockTransaction->quantity, 2, ',', '.') }}

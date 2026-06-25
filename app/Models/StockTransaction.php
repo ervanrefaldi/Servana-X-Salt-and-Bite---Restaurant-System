@@ -17,6 +17,7 @@ class StockTransaction extends Model
         'total_price',
         'transaction_date',
         'description',
+        'status',
         'created_by',
     ];
 

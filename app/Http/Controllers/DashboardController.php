@@ -293,6 +293,10 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $pendingStockTransactions = StockTransaction::with(['ingredient', 'creator'])
+            ->where('status', 'pengajuan')
+            ->get();
+
         return view('dashboards.keuangan', compact(
             'totalIncome',
             'totalExpense',
@@ -302,7 +306,8 @@ class DashboardController extends Controller
             'salesIncome',
             'stockExpense',
             'salaryExpense',
-            'latestTransactions'
+            'latestTransactions',
+            'pendingStockTransactions'
         ));
     }
 
@@ -321,6 +326,7 @@ class DashboardController extends Controller
         $stockOut = StockTransaction::where('type', 'out')->count();
 
         $monthlyPurchaseCost = StockTransaction::where('type', 'in')
+            ->where('status', 'cair')
             ->whereMonth('transaction_date', now()->month)
             ->whereYear('transaction_date', now()->year)
             ->sum('total_price');

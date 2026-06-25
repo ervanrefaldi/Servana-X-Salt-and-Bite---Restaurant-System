@@ -14,29 +14,36 @@ class SalaryPaymentController extends Controller
     private const PAYROLL_DAYS = 30;
     private const BONUS_PERCENTAGE = 0.10;
 
+    private function canManageSalaries(): bool
+    {
+        return in_array(auth()->user()->role, ['admin', 'keuangan'], true);
+    }
+
     public function index(Request $request)
     {
         $month = (int) ($request->month ?? now()->month);
         $year = (int) ($request->year ?? now()->year);
 
         $period = $this->getPayrollPeriod($month, $year);
+        $canManage = $this->canManageSalaries();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Ambil karyawan aktif yang sudah masuk kerja paling lambat tanggal tutup buku.
-        |--------------------------------------------------------------------------
-        | Contoh:
-        | Tutup buku 25 Juni 2026.
-        | Karyawan masuk 25 Juni 2026 tetap muncul dan dihitung 1 hari.
-        */
+        if ($canManage) {
+            /*
+            |--------------------------------------------------------------------------
+            | Ambil karyawan aktif yang sudah masuk kerja paling lambat tanggal tutup buku.
+            |--------------------------------------------------------------------------
+            | Contoh:
+            | Tutup buku 25 Juni 2026.
+            | Karyawan masuk 25 Juni 2026 tetap muncul dan dihitung 1 hari.
+            */
 
-        $employees = Employee::where('employment_status', 'active')
-            ->whereNotNull('hire_date')
-            ->whereDate('hire_date', '<=', $period['period_end'])
-            ->orderBy('name')
-            ->get();
+            $employees = Employee::where('employment_status', 'active')
+                ->whereNotNull('hire_date')
+                ->whereDate('hire_date', '<=', $period['period_end'])
+                ->orderBy('name')
+                ->get();
 
-        foreach ($employees as $employee) {
+            foreach ($employees as $employee) {
             $existingSalary = SalaryPayment::where('employee_id', $employee->id)
                 ->where('salary_month', $month)
                 ->where('salary_year', $year)
@@ -96,6 +103,7 @@ class SalaryPaymentController extends Controller
                     'created_by' => auth()->id(),
                 ]);
             }
+            }
         }
 
         $salaryPayments = SalaryPayment::with(['employee', 'creator'])
@@ -119,12 +127,17 @@ class SalaryPaymentController extends Controller
             'periodEnd',
             'totalPayroll',
             'paidPayroll',
-            'unpaidPayroll'
+            'unpaidPayroll',
+            'canManage'
         ));
     }
 
     public function updateAttendance(Request $request, SalaryPayment $salaryPayment)
     {
+        if (! $this->canManageSalaries()) {
+            abort(403, 'Anda tidak memiliki akses untuk mengelola gaji.');
+        }
+
         if ($salaryPayment->status === 'paid') {
             return back()->withErrors([
                 'attendance' => 'Jumlah tidak masuk tidak dapat diubah karena gaji sudah dibayar.',
@@ -185,6 +198,10 @@ class SalaryPaymentController extends Controller
 
     public function markAsPaid(SalaryPayment $salaryPayment)
     {
+        if (! $this->canManageSalaries()) {
+            abort(403, 'Anda tidak memiliki akses untuk mengelola gaji.');
+        }
+
         if ($salaryPayment->status === 'paid') {
             return back()->with('success', 'Gaji karyawan ini sudah dibayar.');
         }
@@ -237,6 +254,10 @@ class SalaryPaymentController extends Controller
 
     public function markAsUnpaid(SalaryPayment $salaryPayment)
     {
+        if (! $this->canManageSalaries()) {
+            abort(403, 'Anda tidak memiliki akses untuk mengelola gaji.');
+        }
+
         if ($salaryPayment->status === 'unpaid') {
             return back()->with('success', 'Gaji karyawan ini sudah berstatus belum dibayar.');
         }

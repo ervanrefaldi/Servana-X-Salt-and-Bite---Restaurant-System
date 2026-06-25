@@ -14,7 +14,8 @@
                 </h3>
 
                 <p class="text-gray-600">
-                    Anda dapat mengelola akun staff, data karyawan, dan pembayaran gaji bulanan.
+                    Anda dapat mengelola akun staff dan data karyawan. Untuk melihat gaji karyawan,
+                    gunakan menu Lihat Gaji — pengelolaan gaji dilakukan oleh bagian keuangan.
                 </p>
             </div>
 
@@ -69,7 +70,7 @@
                     <a href="{{ route('salary-payments.index') }}"
                        class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
                        style="background-color: #f59e0b; color: #ffffff;">
-                        Kelola Gaji Bulanan
+                        Lihat Gaji Karyawan
                     </a>
                 </div>
             </div>

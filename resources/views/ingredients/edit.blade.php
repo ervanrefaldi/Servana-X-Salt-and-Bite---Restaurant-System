@@ -70,21 +70,7 @@
                         </select>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="mb-4">
-                            <label class="block mb-2 font-medium">
-                                Stok Saat Ini
-                            </label>
-
-                            <input type="number"
-                                   step="0.01"
-                                   name="current_stock"
-                                   value="{{ old('current_stock', $ingredient->current_stock) }}"
-                                   class="w-full border-gray-300 rounded-md shadow-sm"
-                                   min="0"
-                                   required>
-                        </div>
-
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
                         <div class="mb-4">
                             <label class="block mb-2 font-medium">
                                 Stok Minimum

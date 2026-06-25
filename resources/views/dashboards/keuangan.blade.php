@@ -15,7 +15,7 @@
 
                 <p class="text-gray-600">
                     Anda dapat memantau pemasukan dari kasir, pengeluaran stok dari dapur,
-                    pengeluaran gaji dari SDM, serta mencatat transaksi manual lainnya.
+                    mengelola pembayaran gaji karyawan, serta mencatat transaksi manual lainnya.
                 </p>
             </div>
 
@@ -74,7 +74,7 @@
                 </div>
 
                 <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                    <p class="text-sm text-gray-500">Pengeluaran Gaji SDM</p>
+                    <p class="text-sm text-gray-500">Pengeluaran Gaji</p>
                     <h3 class="text-xl font-bold text-red-600">
                         Rp{{ number_format($salaryExpense ?? 0, 0, ',', '.') }}
                     </h3>
@@ -98,6 +98,85 @@
                        style="background-color: #16a34a; color: #ffffff;">
                         Tambah Transaksi Manual
                     </a>
+
+                    <a href="{{ route('salary-payments.index') }}"
+                       class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
+                       style="background-color: #f59e0b; color: #ffffff;">
+                        Kelola Gaji Karyawan
+                    </a>
+                </div>
+                </div>
+            </div>
+
+            @if (session('success'))
+                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+                    <ul class="list-disc ml-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <div class="bg-white shadow-sm sm:rounded-lg overflow-hidden mb-6">
+                <div class="p-6 border-b">
+                    <h3 class="text-lg font-semibold">
+                        Persetujuan Pembelian Stok
+                    </h3>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-left">
+                                <th class="p-4 border">Tanggal</th>
+                                <th class="p-4 border">Bahan</th>
+                                <th class="p-4 border">Supplier</th>
+                                <th class="p-4 border">Jumlah</th>
+                                <th class="p-4 border">Total Harga</th>
+                                <th class="p-4 border">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($pendingStockTransactions as $transaction)
+                                <tr>
+                                    <td class="p-4 border">{{ $transaction->transaction_date->format('d-m-Y') }}</td>
+                                    <td class="p-4 border">{{ $transaction->ingredient->name ?? $transaction->ingredient_name }}</td>
+                                    <td class="p-4 border">{{ $transaction->supplier_name ?? '-' }}</td>
+                                    <td class="p-4 border">{{ number_format($transaction->quantity, 2, ',', '.') }} {{ $transaction->unit }}</td>
+                                    <td class="p-4 border font-bold text-red-600">Rp{{ number_format($transaction->total_price, 0, ',', '.') }}</td>
+                                    <td class="p-4 border">
+                                        <div class="flex space-x-2">
+                                            <form action="{{ route('stock-transactions.updateStatus', $transaction) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="cair">
+                                                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm font-semibold" onclick="return confirm('Cairkan dana dan setujui pembelian ini?')">Cairkan</button>
+                                            </form>
+                                            <form action="{{ route('stock-transactions.updateStatus', $transaction) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="ditolak">
+                                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold" onclick="return confirm('Tolak pembelian ini?')">Tolak</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="p-4 border text-center text-gray-500">
+                                        Tidak ada pengajuan pembelian stok baru.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

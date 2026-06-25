@@ -38,7 +38,6 @@ class IngredientController extends Controller
             'name' => 'required|string|max:100|unique:ingredients,name',
             'category' => 'nullable|string|max:100',
             'unit' => 'required|string|max:30',
-            'current_stock' => 'required|numeric|min:0',
             'minimum_stock' => 'required|numeric|min:0',
         ]);
 
@@ -46,7 +45,7 @@ class IngredientController extends Controller
             'name' => $request->name,
             'category' => $request->category,
             'unit' => $request->unit,
-            'current_stock' => $request->current_stock,
+            'current_stock' => 0,
             'minimum_stock' => $request->minimum_stock,
         ]);
 
@@ -72,7 +71,6 @@ class IngredientController extends Controller
             'name' => 'required|string|max:100|unique:ingredients,name,' . $ingredient->id,
             'category' => 'nullable|string|max:100',
             'unit' => 'required|string|max:30',
-            'current_stock' => 'required|numeric|min:0',
             'minimum_stock' => 'required|numeric|min:0',
         ]);
 
@@ -80,7 +78,6 @@ class IngredientController extends Controller
             'name' => $request->name,
             'category' => $request->category,
             'unit' => $request->unit,
-            'current_stock' => $request->current_stock,
             'minimum_stock' => $request->minimum_stock,
         ]);
 

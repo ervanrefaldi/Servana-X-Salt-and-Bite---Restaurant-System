@@ -21,6 +21,7 @@ class StockTransactionController extends Controller
         $totalStockOut = StockTransaction::where('type', 'out')->count();
 
         $totalPurchaseCost = StockTransaction::where('type', 'in')
+            ->where('status', 'cair')
             ->sum('total_price');
 
         return view('stock_transactions.index', compact(
@@ -58,12 +59,15 @@ class StockTransactionController extends Controller
                 ->withInput();
         }
 
+
         DB::beginTransaction();
 
         try {
             $totalPrice = $request->type === 'in'
                 ? $request->quantity * $request->unit_price
                 : 0;
+
+            $status = $request->type === 'in' ? 'pengajuan' : 'selesai';
 
             StockTransaction::create([
                 'ingredient_id' => $ingredient->id,
@@ -76,32 +80,23 @@ class StockTransactionController extends Controller
                 'total_price' => $totalPrice,
                 'transaction_date' => $request->transaction_date,
                 'description' => $request->description,
+                'status' => $status,
                 'created_by' => auth()->id(),
             ]);
 
-            if ($request->type === 'in') {
-                $ingredient->increment('current_stock', $request->quantity);
-            } else {
+            if ($request->type === 'out') {
                 $ingredient->decrement('current_stock', $request->quantity);
-            }
-
-            if ($request->type === 'in' && $totalPrice > 0) {
-                FinancialTransaction::create([
-                    'order_id' => null,
-                    'type' => 'expense',
-                    'category' => 'stock_purchase',
-                    'title' => 'Pembelian stok ' . $ingredient->name,
-                    'amount' => $totalPrice,
-                    'transaction_date' => $request->transaction_date,
-                    'description' => 'Pembelian bahan dari dapur. Supplier: ' . ($request->supplier_name ?? '-'),
-                    'created_by' => auth()->id(),
-                ]);
             }
 
             DB::commit();
 
+            if ($request->type === 'in') {
+                return redirect()->route('stock-transactions.index')
+                    ->with('success', 'Pengajuan transaksi stok bahan berhasil ditambahkan dan menunggu persetujuan keuangan.');
+            }
+
             return redirect()->route('stock-transactions.index')
-                ->with('success', 'Transaksi stok bahan berhasil ditambahkan.');
+                ->with('success', 'Transaksi penggunaan stok bahan berhasil dicatat.');
         } catch (\Throwable $e) {
             DB::rollBack();
 
@@ -116,5 +111,51 @@ class StockTransactionController extends Controller
         $stockTransaction->load(['creator', 'ingredient']);
 
         return view('stock_transactions.show', compact('stockTransaction'));
+    }
+
+    public function updateStatus(Request $request, StockTransaction $stockTransaction)
+    {
+        $request->validate([
+            'status' => 'required|in:cair,ditolak'
+        ]);
+
+        if ($stockTransaction->status !== 'pengajuan') {
+            return back()->withErrors(['error' => 'Status transaksi tidak dapat diubah.']);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $stockTransaction->update(['status' => $request->status]);
+
+            if ($request->status === 'cair') {
+
+                $ingredient = Ingredient::find($stockTransaction->ingredient_id);
+                if ($ingredient) {
+                    $ingredient->increment('current_stock', $stockTransaction->quantity);
+                }
+
+                if ($stockTransaction->total_price > 0) {
+                    FinancialTransaction::create([
+                        'order_id' => null,
+                        'type' => 'expense',
+                        'category' => 'stock_purchase',
+                        'title' => 'Pembelian stok ' . $stockTransaction->ingredient_name,
+                        'amount' => $stockTransaction->total_price,
+                        'transaction_date' => $stockTransaction->transaction_date,
+                        'description' => 'Pembelian bahan. Supplier: ' . ($stockTransaction->supplier_name ?? '-'),
+                        'created_by' => auth()->id(),
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Status transaksi berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
     }
 }

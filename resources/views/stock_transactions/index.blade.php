@@ -81,6 +81,7 @@
                             <th class="p-4 border">Jumlah</th>
                             <th class="p-4 border">Harga Satuan</th>
                             <th class="p-4 border">Total Harga</th>
+                            <th class="p-4 border">Status</th>
                             <th class="p-4 border">Aksi</th>
                         </tr>
                     </thead>
@@ -130,6 +131,26 @@
                                 </td>
 
                                 <td class="p-4 border">
+                                    @if ($transaction->status === 'pengajuan')
+                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs">
+                                            Pengajuan
+                                        </span>
+                                    @elseif ($transaction->status === 'cair')
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">
+                                            Cair
+                                        </span>
+                                    @elseif ($transaction->status === 'ditolak')
+                                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">
+                                            Ditolak
+                                        </span>
+                                    @else
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                                            Selesai
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <td class="p-4 border">
                                     <a href="{{ route('stock-transactions.show', $transaction) }}"
                                        class="text-blue-600 hover:underline">
                                         Detail
@@ -138,7 +159,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="p-4 border text-center text-gray-500">
+                                <td colspan="10" class="p-4 border text-center text-gray-500">
                                     Belum ada data transaksi stok.
                                 </td>
                             </tr>

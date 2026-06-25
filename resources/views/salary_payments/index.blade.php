@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Kelola Gaji Karyawan
+            {{ ($canManage ?? false) ? 'Kelola Gaji Karyawan' : 'Lihat Gaji Karyawan' }}
         </h2>
     </x-slot>
 
@@ -68,13 +68,15 @@
                         </button>
                     </div>
 
-                    <div class="flex items-end">
-                        <a href="{{ route('employees.index') }}"
-                           class="w-full text-center px-4 py-2 rounded-md text-sm font-semibold"
-                           style="background-color: #4b5563; color: #ffffff;">
-                            Kelola Karyawan
-                        </a>
-                    </div>
+                    @if ($canManage ?? false)
+                        <div class="flex items-end">
+                            <a href="{{ route('employees.index') }}"
+                               class="w-full text-center px-4 py-2 rounded-md text-sm font-semibold"
+                               style="background-color: #4b5563; color: #ffffff;">
+                                Kelola Karyawan
+                            </a>
+                        </div>
+                    @endif
                 </form>
 
                 <div class="mt-4 p-4 bg-blue-50 text-blue-700 rounded">
@@ -142,7 +144,9 @@
                             <th class="p-4 border">Potongan</th>
                             <th class="p-4 border">Total Gaji</th>
                             <th class="p-4 border">Status Bayar</th>
-                            <th class="p-4 border">Aksi</th>
+                            @if ($canManage ?? false)
+                                <th class="p-4 border">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
 
@@ -187,7 +191,7 @@
                                 </td>
 
                                 <td class="p-4 border">
-                                    @if ($salaryPayment->status === 'unpaid')
+                                    @if (($canManage ?? false) && $salaryPayment->status === 'unpaid')
                                         <form action="{{ route('salary-payments.attendance', $salaryPayment) }}"
                                               method="POST"
                                               class="flex gap-2 items-center">
@@ -263,41 +267,43 @@
                                     @endif
                                 </td>
 
-                                <td class="p-4 border">
-                                    <div class="flex flex-wrap gap-2">
-                                        @if ($salaryPayment->status === 'unpaid')
-                                            <form action="{{ route('salary-payments.paid', $salaryPayment) }}"
-                                                  method="POST"
-                                                  onsubmit="return confirm('Tandai gaji ini sudah dibayar?')">
-                                                @csrf
-                                                @method('PATCH')
+                                @if ($canManage ?? false)
+                                    <td class="p-4 border">
+                                        <div class="flex flex-wrap gap-2">
+                                            @if ($salaryPayment->status === 'unpaid')
+                                                <form action="{{ route('salary-payments.paid', $salaryPayment) }}"
+                                                      method="POST"
+                                                      onsubmit="return confirm('Tandai gaji ini sudah dibayar?')">
+                                                    @csrf
+                                                    @method('PATCH')
 
-                                                <button type="submit"
-                                                        class="px-3 py-1 rounded text-xs font-semibold"
-                                                        style="background-color: #16a34a; color: #ffffff;">
-                                                    Bayar
-                                                </button>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('salary-payments.unpaid', $salaryPayment) }}"
-                                                  method="POST"
-                                                  onsubmit="return confirm('Kembalikan status menjadi belum dibayar?')">
-                                                @csrf
-                                                @method('PATCH')
+                                                    <button type="submit"
+                                                            class="px-3 py-1 rounded text-xs font-semibold"
+                                                            style="background-color: #16a34a; color: #ffffff;">
+                                                        Bayar
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('salary-payments.unpaid', $salaryPayment) }}"
+                                                      method="POST"
+                                                      onsubmit="return confirm('Kembalikan status menjadi belum dibayar?')">
+                                                    @csrf
+                                                    @method('PATCH')
 
-                                                <button type="submit"
-                                                        class="px-3 py-1 rounded text-xs font-semibold"
-                                                        style="background-color: #dc2626; color: #ffffff;">
-                                                    Batalkan
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </td>
+                                                    <button type="submit"
+                                                            class="px-3 py-1 rounded text-xs font-semibold"
+                                                            style="background-color: #dc2626; color: #ffffff;">
+                                                        Batalkan
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="14" class="p-4 border text-center text-gray-500">
+                                <td colspan="{{ ($canManage ?? false) ? 14 : 13 }}" class="p-4 border text-center text-gray-500">
                                     Belum ada data gaji karyawan.
                                 </td>
                             </tr>
