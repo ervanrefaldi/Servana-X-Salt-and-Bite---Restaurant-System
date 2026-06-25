@@ -29,9 +29,16 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label class="block mb-2 font-medium">Nomor Meja</label>
-                        <input type="text" name="table_number" value="{{ old('table_number') }}"
-                            class="w-full border-gray-300 rounded-md shadow-sm" placeholder="Contoh: T01">
+                        <label class="block mb-2 font-medium">Grup Meja (A-J)</label>
+                        <select name="table_group" class="w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="">-- Pilih Grup Meja --</option>
+                            @foreach(range('A', 'J') as $letter)
+                                <option value="{{ $letter }}" {{ old('table_group') == $letter ? 'selected' : '' }}>
+                                    Grup {{ $letter }} (Kapasitas {{ (ord($letter) - 64) * 2 }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="text-sm text-gray-500 mt-1">Sistem akan secara otomatis menambahkan nomor urut pada nama meja (misal: A-8).</p>
                     </div>
 
                     <div class="mb-4">
@@ -46,16 +53,6 @@
                             </option>
                         </select>
                     </div>
-
-                    <select name="capacity" class="w-full border-gray-300 rounded-md shadow-sm">
-                        <option value="">-- Pilih Kapasitas --</option>
-                        <option value="1" {{ old('capacity') == '1' ? 'selected' : '' }}>1 Orang</option>
-                        <option value="2" {{ old('capacity') == '2' ? 'selected' : '' }}>2 Orang</option>
-                        <option value="4" {{ old('capacity') == '4' ? 'selected' : '' }}>4 Orang</option>
-                        <option value="6" {{ old('capacity') == '6' ? 'selected' : '' }}>6 Orang</option>
-                        <option value="8" {{ old('capacity') == '8' ? 'selected' : '' }}>8 Orang</option>
-                        <option value="10" {{ old('capacity') == '10' ? 'selected' : '' }}>10 Orang</option>
-                    </select>
                     <div class="mb-4">
                         <label class="block mb-2 font-medium">Status Meja</label>
                         <select name="status" class="w-full border-gray-300 rounded-md shadow-sm">

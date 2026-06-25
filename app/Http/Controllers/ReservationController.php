@@ -61,13 +61,19 @@ class ReservationController extends Controller
         }
 
         $tables = Table::where('status', 'available')
-            ->orderBy('table_number')
+            ->orderBy('capacity', 'asc')
+            ->orderBy('table_number', 'asc')
             ->get();
+
+        $reservations = Reservation::whereDate('reservation_date', '>=', now()->toDateString())
+            ->whereNotIn('status', ['cancelled', 'no_show', 'completed'])
+            ->get(['table_id', 'reservation_date', 'start_time', 'end_time']);
 
         return view('reservations.create', compact(
             'customer',
             'isMember',
             'tables',
+            'reservations',
             'activeReservation'
         ));
     }
@@ -128,6 +134,9 @@ class ReservationController extends Controller
         ]);
 
         $startTime = $request->start_time;
+        if (strlen($startTime) == 5) {
+            $startTime .= ':00';
+        }
         $endTime = date('H:i:s', strtotime($startTime . ' +60 minutes'));
 
         /*
@@ -142,8 +151,15 @@ class ReservationController extends Controller
                 'table_id' => 'required|exists:tables,id',
             ]);
 
+            $conflictingTableIds = Reservation::where('reservation_date', $request->reservation_date)
+                ->where('start_time', '<', $endTime)
+                ->where('end_time', '>', $startTime)
+                ->whereNotIn('status', ['cancelled', 'no_show', 'completed'])
+                ->pluck('table_id');
+
             $table = Table::where('id', $request->table_id)
                 ->where('status', 'available')
+                ->whereNotIn('id', $conflictingTableIds)
                 ->first();
 
             if (! $table) {
@@ -188,11 +204,23 @@ class ReservationController extends Controller
             'customer_phone' => 'required|string|max:20',
         ]);
 
-        $table = Table::where('status', 'available')
+        $conflictingTableIds = Reservation::where('reservation_date', $request->reservation_date)
+            ->where('start_time', '<', $endTime)
+            ->where('end_time', '>', $startTime)
+            ->whereNotIn('status', ['cancelled', 'no_show', 'completed'])
+            ->pluck('table_id');
+
+        $tableQuery = Table::where('status', 'available')
+            ->whereNotIn('id', $conflictingTableIds)
             ->where('capacity', '>=', (int) $request->guest_count)
             ->orderBy('capacity', 'asc')
-            ->orderBy('table_number', 'asc')
-            ->first();
+            ->get();
+
+        $table = null;
+        if ($tableQuery->isNotEmpty()) {
+            $bestCapacity = $tableQuery->first()->capacity;
+            $table = $tableQuery->where('capacity', $bestCapacity)->random();
+        }
 
         if (! $table) {
             return back()
@@ -236,6 +264,30 @@ class ReservationController extends Controller
 
     public function index(Request $request)
     {
+        $now = now();
+        $dateOnly = $now->format('Y-m-d');
+        $timeOnly = $now->format('H:i:s');
+
+        Reservation::where('status', 'pending')
+            ->where(function ($query) use ($dateOnly, $timeOnly) {
+                $query->whereDate('reservation_date', '<', $dateOnly)
+                      ->orWhere(function ($q) use ($dateOnly, $timeOnly) {
+                          $q->whereDate('reservation_date', '=', $dateOnly)
+                            ->whereTime('end_time', '<', $timeOnly);
+                      });
+            })
+            ->update(['status' => 'no_show']);
+
+        Reservation::where('status', 'confirmed')
+            ->where(function ($query) use ($dateOnly, $timeOnly) {
+                $query->whereDate('reservation_date', '<', $dateOnly)
+                      ->orWhere(function ($q) use ($dateOnly, $timeOnly) {
+                          $q->whereDate('reservation_date', '=', $dateOnly)
+                            ->whereTime('end_time', '<', $timeOnly);
+                      });
+            })
+            ->update(['status' => 'completed']);
+
         $search = $request->search;
 
         $reservations = Reservation::with(['customer', 'table'])
@@ -263,8 +315,21 @@ class ReservationController extends Controller
     public function updateStatus(Request $request, Reservation $reservation)
     {
         $request->validate([
-            'status' => 'required|in:pending,confirmed,seated,completed,no_show',
+            'status' => 'required|in:pending,confirmed,completed,no_show',
         ]);
+
+        $dateOnly = \Carbon\Carbon::parse($reservation->reservation_date)->format('Y-m-d');
+        $reservationDateTime = \Carbon\Carbon::parse($dateOnly . ' ' . $reservation->start_time);
+        
+        if (now()->lessThan($reservationDateTime)) {
+            return redirect()->route('reservations.index')
+                ->with('error', 'Status reservasi tidak dapat diubah sebelum waktu reservasi tiba.');
+        }
+
+        if (in_array($reservation->status, ['no_show', 'completed'])) {
+            return redirect()->route('reservations.index')
+                ->with('error', 'Status reservasi yang sudah Selesai atau Tidak Datang tidak dapat diubah lagi.');
+        }
 
         $reservation->update([
             'status' => $request->status,

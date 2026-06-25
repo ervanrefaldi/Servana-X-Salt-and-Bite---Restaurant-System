@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * Menampilkan halaman login.
      */
     public function create(): View
     {
@@ -20,19 +20,52 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Memproses login user dan mengarahkan sesuai role.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Autentikasi Login
+        |--------------------------------------------------------------------------
+        | Logic autentikasi detail ada di LoginRequest.php.
+        | Di sana sistem mengecek email dan password.
+        */
+
         $request->authenticate();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Regenerate Session
+        |--------------------------------------------------------------------------
+        | Ini penting untuk keamanan setelah login berhasil.
+        */
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        /*
+        |--------------------------------------------------------------------------
+        | Redirect Berdasarkan Role
+        |--------------------------------------------------------------------------
+        | Setelah berhasil login, user diarahkan ke dashboard sesuai role.
+        */
+
+        $role = auth()->user()->role;
+
+        return match ($role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'member' => redirect()->route('member.dashboard'),
+            'resepsionis' => redirect()->route('resepsionis.dashboard'),
+            'kasir' => redirect()->route('kasir.dashboard'),
+            'keuangan' => redirect()->route('keuangan.dashboard'),
+            'dapur' => redirect()->route('dapur.dashboard'),
+            'sdm' => redirect()->route('sdm.dashboard'),
+            default => redirect()->route('dashboard'),
+        };
     }
 
     /**
-     * Destroy an authenticated session.
+     * Logout user.
      */
     public function destroy(Request $request): RedirectResponse
     {

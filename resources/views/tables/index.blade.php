@@ -20,6 +20,12 @@
                 </div>
             @endif
 
+            @if (session('error'))
+                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="bg-white shadow-sm sm:rounded-lg overflow-hidden">
                 <table class="w-full border-collapse">
                     <thead>
@@ -58,14 +64,20 @@
 
                                     <a href="{{ route('tables.edit', $table) }}" class="text-yellow-600 ml-2">Edit</a>
 
-                                    <form action="{{ route('tables.destroy', $table) }}" method="POST" class="inline"
-                                        onsubmit="return confirm('Yakin ingin menghapus meja ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 ml-2">
+                                    @if(isset($deletableTableIds) && in_array($table->id, $deletableTableIds))
+                                        <form action="{{ route('tables.destroy', $table) }}" method="POST" class="inline"
+                                            onsubmit="return confirm('Yakin ingin menghapus meja ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 ml-2">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @else
+                                        <button type="button" class="text-gray-400 ml-2 cursor-not-allowed" title="Hanya meja terakhir di abjad ini yang bisa dihapus">
                                             Hapus
                                         </button>
-                                    </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

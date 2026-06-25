@@ -96,40 +96,23 @@ class ServanaSeeder extends Seeder
             'member_code' => null,
         ]);
 
-        Table::insert([
-            [
-                'table_number' => 'T01',
-                'area' => 'indoor',
-                'capacity' => 2,
-                'status' => 'available',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'table_number' => 'T02',
-                'area' => 'indoor',
-                'capacity' => 4,
-                'status' => 'available',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'table_number' => 'T03',
-                'area' => 'outdoor',
-                'capacity' => 4,
-                'status' => 'available',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'table_number' => 'T04',
-                'area' => 'outdoor',
-                'capacity' => 6,
-                'status' => 'available',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        $tablesData = [];
+        foreach (range('A', 'J') as $letter) {
+            $capacity = (ord($letter) - 64) * 2;
+            $area = $capacity <= 10 ? 'indoor' : 'outdoor';
+            
+            for ($i = 1; $i <= 7; $i++) {
+                $tablesData[] = [
+                    'table_number' => "{$letter}-{$i}",
+                    'area' => $area,
+                    'capacity' => $capacity,
+                    'status' => 'available',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+        Table::insert($tablesData);
 
         Menu::insert([
             [

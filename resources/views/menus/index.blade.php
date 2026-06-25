@@ -5,10 +5,10 @@
                 Kelola Menu
             </h2>
 
-            <a href="{{ route('kasir.dashboard') }}"
+            <a href="{{ route('dashboard') }}"
                class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
                style="background-color: #2563eb; color: #ffffff;">
-                Kembali ke Dashboard Kasir
+                Kembali ke Dashboard
             </a>
         </div>
     </x-slot>

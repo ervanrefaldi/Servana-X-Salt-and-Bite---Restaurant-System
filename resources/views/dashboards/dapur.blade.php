@@ -71,6 +71,12 @@
                 </h3>
 
                 <div class="flex flex-wrap gap-3">
+                    <a href="{{ route('menus.index') }}"
+                       class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
+                       style="background-color: #ec4899; color: #ffffff;">
+                        Kelola Menu
+                    </a>
+
                     <a href="{{ route('ingredients.index') }}"
                        class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
                        style="background-color: #2563eb; color: #ffffff;">

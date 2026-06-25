@@ -34,6 +34,30 @@ class DashboardController extends Controller
 
     public function admin()
     {
+        $now = now();
+        $dateOnly = $now->format('Y-m-d');
+        $timeOnly = $now->format('H:i:s');
+
+        Reservation::where('status', 'pending')
+            ->where(function ($query) use ($dateOnly, $timeOnly) {
+                $query->whereDate('reservation_date', '<', $dateOnly)
+                      ->orWhere(function ($q) use ($dateOnly, $timeOnly) {
+                          $q->whereDate('reservation_date', '=', $dateOnly)
+                            ->whereTime('end_time', '<', $timeOnly);
+                      });
+            })
+            ->update(['status' => 'no_show']);
+
+        Reservation::where('status', 'confirmed')
+            ->where(function ($query) use ($dateOnly, $timeOnly) {
+                $query->whereDate('reservation_date', '<', $dateOnly)
+                      ->orWhere(function ($q) use ($dateOnly, $timeOnly) {
+                          $q->whereDate('reservation_date', '=', $dateOnly)
+                            ->whereTime('end_time', '<', $timeOnly);
+                      });
+            })
+            ->update(['status' => 'completed']);
+
         /*
     |--------------------------------------------------------------------------
     | Ringkasan Operasional
@@ -163,6 +187,30 @@ class DashboardController extends Controller
     }
     public function resepsionis()
     {
+        $now = now();
+        $dateOnly = $now->format('Y-m-d');
+        $timeOnly = $now->format('H:i:s');
+
+        Reservation::where('status', 'pending')
+            ->where(function ($query) use ($dateOnly, $timeOnly) {
+                $query->whereDate('reservation_date', '<', $dateOnly)
+                      ->orWhere(function ($q) use ($dateOnly, $timeOnly) {
+                          $q->whereDate('reservation_date', '=', $dateOnly)
+                            ->whereTime('end_time', '<', $timeOnly);
+                      });
+            })
+            ->update(['status' => 'no_show']);
+
+        Reservation::where('status', 'confirmed')
+            ->where(function ($query) use ($dateOnly, $timeOnly) {
+                $query->whereDate('reservation_date', '<', $dateOnly)
+                      ->orWhere(function ($q) use ($dateOnly, $timeOnly) {
+                          $q->whereDate('reservation_date', '=', $dateOnly)
+                            ->whereTime('end_time', '<', $timeOnly);
+                      });
+            })
+            ->update(['status' => 'completed']);
+
         $totalReservations = Reservation::count();
 
         $pendingReservations = Reservation::where('status', 'pending')
@@ -192,7 +240,8 @@ class DashboardController extends Controller
         | Stok 0 nanti diberi keterangan "stok habis" di view.
         */
 
-        $menus = Menu::where('is_available', true)
+        $menus = Menu::with('menuIngredients.ingredient')
+            ->where('is_available', true)
             ->orderBy('category')
             ->orderBy('name')
             ->get();

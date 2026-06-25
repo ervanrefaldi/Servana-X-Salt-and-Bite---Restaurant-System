@@ -185,12 +185,10 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     | Admin dan Kasir
     |--------------------------------------------------------------------------
-    | Admin dan kasir dapat mengelola menu dan transaksi POS.
+    | Admin dan kasir dapat mengelola transaksi POS.
     */
 
     Route::middleware(['role:admin,kasir'])->group(function () {
-        Route::resource('menus', MenuController::class);
-
         Route::get('/orders/check-member/{memberCode}', [OrderController::class, 'checkMember'])
             ->name('orders.checkMember');
 
@@ -234,10 +232,12 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     | Admin dan Dapur
     |--------------------------------------------------------------------------
-    | Admin dan dapur dapat mengelola stok bahan pokok.
+    | Admin dan dapur dapat mengelola stok bahan pokok dan kelola menu.
     */
 
     Route::middleware(['role:admin,dapur'])->group(function () {
+        Route::resource('menus', MenuController::class);
+
         Route::resource('ingredients', IngredientController::class);
 
         Route::get('/stock-transactions', [StockTransactionController::class, 'index'])
@@ -271,6 +271,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/salary-payments', [SalaryPaymentController::class, 'index'])
             ->name('salary-payments.index');
+
+        Route::patch('/salary-payments/{salaryPayment}/attendance', [SalaryPaymentController::class, 'updateAttendance'])
+            ->name('salary-payments.attendance');
 
         Route::patch('/salary-payments/{salaryPayment}/paid', [SalaryPaymentController::class, 'markAsPaid'])
             ->name('salary-payments.paid');

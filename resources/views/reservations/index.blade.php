@@ -16,7 +16,6 @@
         $statusLabels = [
             'pending' => 'Menunggu',
             'confirmed' => 'Dikonfirmasi',
-            'seated' => 'Sudah Duduk',
             'completed' => 'Selesai',
             'cancelled' => 'Dibatalkan',
             'no_show' => 'Tidak Datang',
@@ -34,6 +33,12 @@
             @if (session('success'))
                 <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
                     {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+                    {{ session('error') }}
                 </div>
             @endif
             <form method="GET" action="{{ route('reservations.index') }}" class="mb-6">
@@ -112,13 +117,31 @@
                                 </td>
 
                                 <td class="p-4 border">
+                                    @php
+                                        $dateOnly = \Carbon\Carbon::parse($reservation->reservation_date)->format('Y-m-d');
+                                        $reservationDateTime = \Carbon\Carbon::parse($dateOnly . ' ' . $reservation->start_time);
+                                        $isTimeArrived = now()->greaterThanOrEqualTo($reservationDateTime);
+                                        $isNoShow = $reservation->status === 'no_show';
+                                        $isCompleted = $reservation->status === 'completed';
+                                        $isDisabled = !$isTimeArrived || $isNoShow || $isCompleted;
+                                        $titleText = '';
+                                        if ($isNoShow) {
+                                            $titleText = 'Status tidak bisa diubah karena reservasi sudah ditandai Tidak Datang';
+                                        } elseif ($isCompleted) {
+                                            $titleText = 'Status tidak bisa diubah karena reservasi sudah ditandai Selesai';
+                                        } elseif (!$isTimeArrived) {
+                                            $titleText = 'Status hanya bisa diubah setelah jam reservasi tiba';
+                                        }
+                                    @endphp
                                     <form action="{{ route('reservations.updateStatus', $reservation) }}"
                                         method="POST">
                                         @csrf
                                         @method('PATCH')
 
                                         <select name="status" onchange="this.form.submit()"
-                                            class="border-gray-300 rounded-md shadow-sm">
+                                            class="border-gray-300 rounded-md shadow-sm"
+                                            {{ $isDisabled ? 'disabled' : '' }}
+                                            title="{{ $titleText }}">
                                             <option value="pending"
                                                 {{ $reservation->status === 'pending' ? 'selected' : '' }}>
                                                 Menunggu
@@ -127,11 +150,6 @@
                                             <option value="confirmed"
                                                 {{ $reservation->status === 'confirmed' ? 'selected' : '' }}>
                                                 Dikonfirmasi
-                                            </option>
-
-                                            <option value="seated"
-                                                {{ $reservation->status === 'seated' ? 'selected' : '' }}>
-                                                Sudah Duduk
                                             </option>
 
                                             <option value="completed"
@@ -144,7 +162,6 @@
                                                 Tidak Datang
                                             </option>
                                         </select>
-                                    </form>
                                     </form>
                                 </td>
 

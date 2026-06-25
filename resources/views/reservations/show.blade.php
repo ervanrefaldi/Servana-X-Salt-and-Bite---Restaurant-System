@@ -16,7 +16,6 @@
         $statusLabels = [
             'pending' => 'Menunggu',
             'confirmed' => 'Dikonfirmasi',
-            'seated' => 'Sudah Duduk',
             'completed' => 'Selesai',
             'cancelled' => 'Dibatalkan',
             'no_show' => 'Tidak Datang',
@@ -120,9 +119,6 @@
                             </option>
                             <option value="confirmed" {{ $reservation->status == 'confirmed' ? 'selected' : '' }}>
                                 Dikonfirmasi
-                            </option>
-                            <option value="seated" {{ $reservation->status == 'seated' ? 'selected' : '' }}>
-                                Sudah Duduk
                             </option>
                             <option value="completed" {{ $reservation->status == 'completed' ? 'selected' : '' }}>
                                 Selesai

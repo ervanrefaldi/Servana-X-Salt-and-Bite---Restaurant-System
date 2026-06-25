@@ -31,9 +31,8 @@
 
                     <div class="mb-4">
                         <label class="block mb-2 font-medium">Nomor Meja</label>
-                        <input type="text" name="table_number"
-                            value="{{ old('table_number', $table->table_number) }}"
-                            class="w-full border-gray-300 rounded-md shadow-sm">
+                        <input type="text" value="Meja {{ $table->table_number }} (Kapasitas {{ $table->capacity }})" class="w-full border-gray-300 rounded-md shadow-sm bg-gray-100" disabled>
+                        <p class="text-sm text-gray-500 mt-1">Nomor meja tidak dapat diubah setelah dibuat.</p>
                     </div>
 
                     <div class="mb-4">
@@ -45,23 +44,6 @@
                             <option value="outdoor" {{ old('area', $table->area) == 'outdoor' ? 'selected' : '' }}>
                                 Outdoor
                             </option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block mb-2 font-medium">Kapasitas</label>
-                        <select name="capacity" class="w-full border-gray-300 rounded-md shadow-sm">
-                            <option value="">-- Pilih Kapasitas --</option>
-                            <option value="2" {{ old('capacity', $table->capacity) == '2' ? 'selected' : '' }}>2
-                                Orang</option>
-                            <option value="4" {{ old('capacity', $table->capacity) == '4' ? 'selected' : '' }}>4
-                                Orang</option>
-                            <option value="6" {{ old('capacity', $table->capacity) == '6' ? 'selected' : '' }}>6
-                                Orang</option>
-                            <option value="8" {{ old('capacity', $table->capacity) == '8' ? 'selected' : '' }}>8
-                                Orang</option>
-                            <option value="10" {{ old('capacity', $table->capacity) == '10' ? 'selected' : '' }}>10
-                                Orang</option>
                         </select>
                     </div>
 

@@ -6,8 +6,9 @@
             </h2>
 
             <a href="{{ route('menus.index') }}"
-                class="px-4 py-2 bg-gray-600 text-white rounded-md text-sm hover:bg-gray-700">
-                Back
+               class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
+               style="background-color: #4b5563; color: #ffffff;">
+                Kembali
             </a>
         </div>
     </x-slot>
@@ -38,10 +39,34 @@
                     </p>
                 </div>
                 <div class="mb-4">
-                    <p class="text-sm text-gray-500">Stok</p>
+                    <p class="text-sm text-gray-500">Stok (Dihitung dari Bahan)</p>
                     <p class="text-lg font-semibold">
-                        {{ $menu->stock }}
+                        {{ $menu->stock }} Porsi
                     </p>
+                </div>
+
+                <div class="mb-4">
+                    <p class="text-sm text-gray-500 mb-2">Bahan Baku</p>
+                    @if($menu->menuIngredients && $menu->menuIngredients->count() > 0)
+                        <table class="min-w-full divide-y divide-gray-200 border">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Bahan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah (per porsi)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($menu->menuIngredients as $mi)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $mi->ingredient->name ?? '-' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $mi->quantity }} {{ $mi->ingredient->unit ?? '' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        <p class="text-sm text-gray-500 italic">Belum ada bahan baku yang diatur.</p>
+                    @endif
                 </div>
                 <div class="mb-4">
                     <p class="text-sm text-gray-500">Status</p>

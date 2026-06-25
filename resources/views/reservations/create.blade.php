@@ -121,7 +121,6 @@
                                     $statusLabels = [
                                         'pending' => 'Menunggu',
                                         'confirmed' => 'Dikonfirmasi',
-                                        'seated' => 'Sudah Duduk',
                                         'completed' => 'Selesai',
                                         'no_show' => 'Tidak Datang',
                                     ];
@@ -239,7 +238,7 @@
                             </label>
 
                             <select name="guest_count" class="w-full border-gray-300 rounded-md shadow-sm" required>
-                                @for ($i = 1; $i <= 10; $i++)
+                                @for ($i = 1; $i <= 20; $i++)
                                     <option value="{{ $i }}"
                                         {{ old('guest_count') == $i ? 'selected' : '' }}>
                                         {{ $i }} Orang
@@ -308,4 +307,90 @@
 
 </body>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const guestCountSelect = document.querySelector('select[name="guest_count"]');
+        const tableIdSelect = document.querySelector('select[name="table_id"]');
+        const dateInput = document.querySelector('input[name="reservation_date"]');
+        const startTimeSelect = document.querySelector('select[name="start_time"]');
+        
+        if (guestCountSelect && tableIdSelect && dateInput && startTimeSelect) {
+            const allTables = @json($tables);
+            const allReservations = @json($reservations);
+            const oldTableId = "{{ old('table_id') }}";
+            
+            function updateTableOptions() {
+                const guestCount = parseInt(guestCountSelect.value) || 1;
+                const date = dateInput.value;
+                const startTime = startTimeSelect.value;
+                
+                tableIdSelect.innerHTML = '<option value="">-- Pilih Meja --</option>';
+                
+                if (!date || !startTime) {
+                    const option = document.createElement('option');
+                    option.value = "";
+                    option.disabled = true;
+                    option.textContent = "Silakan isi Tanggal dan Jam Reservasi terlebih dahulu";
+                    tableIdSelect.appendChild(option);
+                    return;
+                }
+                
+                // Hitung end time berdasarkan start time (+1 jam)
+                const startHour = parseInt(startTime.split(':')[0]);
+                const endTime = (startHour + 1).toString().padStart(2, '0') + ':00';
+                const formattedStartTime = startTime + ':00';
+                const formattedEndTime = endTime + ':00';
+                
+                // Cari meja yang bentrok
+                const conflictingTableIds = allReservations.filter(r => {
+                    // reservation_date dari Laravel bisa berupa ISO string seperti "2026-06-20T00:00:00.000000Z"
+                    const rDate = r.reservation_date.split('T')[0];
+                    const rStartTime = r.start_time.length === 5 ? r.start_time + ':00' : r.start_time;
+                    const rEndTime = r.end_time.length === 5 ? r.end_time + ':00' : r.end_time;
+                    
+                    return rDate === date && rStartTime < formattedEndTime && rEndTime > formattedStartTime;
+                }).map(r => r.table_id);
+                
+                // Meja yang secara global available dan tidak bentrok waktu
+                const availableTables = allTables.filter(t => !conflictingTableIds.includes(t.id));
+                
+                // Find tables with capacity >= guest_count
+                const validTables = availableTables.filter(t => t.capacity >= guestCount);
+                
+                if (validTables.length > 0) {
+                    // Find the smallest capacity among valid tables
+                    const minCapacity = Math.min(...validTables.map(t => t.capacity));
+                    
+                    // Filter tables to only show those with minCapacity
+                    const bestFitTables = validTables.filter(t => t.capacity === minCapacity);
+                    
+                    bestFitTables.forEach(table => {
+                        const option = document.createElement('option');
+                        option.value = table.id;
+                        option.textContent = `Meja ${table.table_number} - ${table.area.charAt(0).toUpperCase() + table.area.slice(1)} - Kapasitas ${table.capacity} orang`;
+                        
+                        if (oldTableId && oldTableId == table.id) {
+                            option.selected = true;
+                        }
+                        
+                        tableIdSelect.appendChild(option);
+                    });
+                } else {
+                    const option = document.createElement('option');
+                    option.value = "";
+                    option.disabled = true;
+                    option.textContent = "Tidak ada meja tersedia untuk waktu dan kapasitas tersebut";
+                    tableIdSelect.appendChild(option);
+                }
+            }
+            
+            guestCountSelect.addEventListener('change', updateTableOptions);
+            dateInput.addEventListener('change', updateTableOptions);
+            startTimeSelect.addEventListener('change', updateTableOptions);
+            
+            // Initial call
+            updateTableOptions();
+        }
+    });
+</script>
 </html>

@@ -32,20 +32,36 @@
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white p-6 shadow-sm sm:rounded-lg">
                     <p class="text-sm text-gray-500">Total Akun Staff</p>
                     <h3 class="text-2xl font-bold">
-                        {{ $totalStaffAccounts }}
+                        {{ $totalStaffAccounts ?? 0 }}
                     </h3>
                 </div>
 
                 <div class="bg-white p-6 shadow-sm sm:rounded-lg">
                     <p class="text-sm text-gray-500">Akun Aktif</p>
                     <h3 class="text-2xl font-bold text-green-600">
-                        {{ $activeStaffAccounts }}
+                        {{ $activeStaffAccounts ?? 0 }}
                     </h3>
                 </div>
+
+                <div class="bg-white p-6 shadow-sm sm:rounded-lg">
+                    <p class="text-sm text-gray-500">Akun Tidak Aktif</p>
+                    <h3 class="text-2xl font-bold text-red-600">
+                        {{ $inactiveStaffAccounts ?? 0 }}
+                    </h3>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 shadow-sm sm:rounded-lg mb-6">
+                <p class="text-sm text-gray-700">
+                    <strong>Catatan:</strong>
+                    Akun staff dibuat dari data karyawan yang sudah ada.
+                    Jika karyawan belum muncul di pilihan tambah staff, pastikan data karyawan aktif,
+                    memiliki email, dan belum memiliki akun staff.
+                </p>
             </div>
 
             <div class="mb-4 flex justify-end">
@@ -56,15 +72,16 @@
                 </a>
             </div>
 
-            <div class="bg-white shadow-sm sm:rounded-lg overflow-hidden">
+            <div class="bg-white shadow-sm sm:rounded-lg overflow-x-auto">
                 <table class="w-full border-collapse">
                     <thead>
                         <tr class="bg-gray-100 text-left">
                             <th class="p-4 border">No</th>
-                            <th class="p-4 border">Nama</th>
+                            <th class="p-4 border">Nama Karyawan</th>
                             <th class="p-4 border">Email</th>
                             <th class="p-4 border">No HP</th>
-                            <th class="p-4 border">Role</th>
+                            <th class="p-4 border">Posisi Karyawan</th>
+                            <th class="p-4 border">Role Akses</th>
                             <th class="p-4 border">Status Akun</th>
                             <th class="p-4 border">Aksi</th>
                         </tr>
@@ -78,19 +95,27 @@
                                 </td>
 
                                 <td class="p-4 border font-semibold">
-                                    {{ $staff->name }}
+                                    {{ $staff->employee->name ?? $staff->name }}
                                 </td>
 
                                 <td class="p-4 border">
-                                    {{ $staff->email }}
+                                    {{ $staff->employee->email ?? $staff->email }}
                                 </td>
 
                                 <td class="p-4 border">
-                                    {{ $staff->phone ?? '-' }}
+                                    {{ $staff->employee->phone ?? $staff->phone ?? '-' }}
                                 </td>
 
                                 <td class="p-4 border">
-                                    {{ ucfirst($staff->role) }}
+                                    {{ $staff->employee->position ?? '-' }}
+                                </td>
+
+                                <td class="p-4 border">
+                                    @if ($staff->role === 'sdm')
+                                        SDM
+                                    @else
+                                        {{ ucfirst($staff->role) }}
+                                    @endif
                                 </td>
 
                                 <td class="p-4 border">
@@ -106,33 +131,37 @@
                                 </td>
 
                                 <td class="p-4 border">
-                                    <a href="{{ route('staff-accounts.show', $staff) }}"
-                                       class="text-blue-600 hover:underline">
-                                        Detail
-                                    </a>
+                                    <div class="flex flex-wrap gap-2">
+                                        <a href="{{ route('staff-accounts.show', $staff) }}"
+                                           class="px-3 py-1 rounded text-xs font-semibold"
+                                           style="background-color: #2563eb; color: #ffffff;">
+                                            Detail
+                                        </a>
 
-                                    <a href="{{ route('staff-accounts.edit', $staff) }}"
-                                       class="text-yellow-600 hover:underline ml-2">
-                                        Edit
-                                    </a>
+                                        <a href="{{ route('staff-accounts.edit', $staff) }}"
+                                           class="px-3 py-1 rounded text-xs font-semibold"
+                                           style="background-color: #f59e0b; color: #ffffff;">
+                                            Edit
+                                        </a>
 
-                                    <form action="{{ route('staff-accounts.destroy', $staff) }}"
-                                          method="POST"
-                                          class="inline"
-                                          onsubmit="return confirm('Yakin ingin menghapus akun staff ini?')">
-                                        @csrf
-                                        @method('DELETE')
+                                        <form action="{{ route('staff-accounts.destroy', $staff) }}"
+                                              method="POST"
+                                              onsubmit="return confirm('Yakin ingin menghapus akun staff ini? Data karyawan tidak akan terhapus.')">
+                                            @csrf
+                                            @method('DELETE')
 
-                                        <button type="submit"
-                                                class="text-red-600 hover:underline ml-2">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                            <button type="submit"
+                                                    class="px-3 py-1 rounded text-xs font-semibold"
+                                                    style="background-color: #dc2626; color: #ffffff;">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="p-4 border text-center text-gray-500">
+                                <td colspan="8" class="p-4 border text-center text-gray-500">
                                     Belum ada akun staff.
                                 </td>
                             </tr>

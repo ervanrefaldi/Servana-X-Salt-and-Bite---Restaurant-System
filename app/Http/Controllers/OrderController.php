@@ -24,7 +24,8 @@ class OrderController extends Controller
 
     public function create()
     {
-        $menus = Menu::where('is_available', true)
+        $menus = Menu::with('menuIngredients.ingredient')
+            ->where('is_available', true)
             ->orderBy('category')
             ->orderBy('name')
             ->get();
@@ -108,7 +109,7 @@ class OrderController extends Controller
                     continue;
                 }
 
-                $menu = Menu::findOrFail($menuId);
+                $menu = Menu::with('menuIngredients.ingredient')->findOrFail($menuId);
 
                 if ($menu->stock < $quantity) {
                     DB::rollBack();
@@ -167,7 +168,14 @@ class OrderController extends Controller
                     'note' => null,
                 ]);
 
-                $item['menu']->decrement('stock', $item['quantity']);
+                // Decrement ingredient stocks instead of menu stock
+                foreach ($item['menu']->menuIngredients as $menuIngredient) {
+                    $ingredient = $menuIngredient->ingredient;
+                    if ($ingredient) {
+                        $consumedQuantity = $menuIngredient->quantity * $item['quantity'];
+                        $ingredient->decrement('current_stock', $consumedQuantity);
+                    }
+                }
             }
 
             FinancialTransaction::create([

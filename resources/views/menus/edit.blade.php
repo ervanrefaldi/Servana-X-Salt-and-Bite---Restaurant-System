@@ -94,16 +94,83 @@
 
                     <div class="mb-4">
                         <label class="block mb-2 font-medium">
-                            Stok
+                            Bahan Baku (Ingredients)
                         </label>
-
-                        <input type="number"
-                               name="stock"
-                               value="{{ old('stock', $menu->stock) }}"
-                               min="0"
-                               class="w-full border-gray-300 rounded-md shadow-sm"
-                               required>
+                        <div id="ingredients-container">
+                            @if(old('ingredients', $menu->menuIngredients->toArray()))
+                                @foreach(old('ingredients', $menu->menuIngredients) as $index => $mi)
+                                    <div class="ingredient-row flex gap-2 mb-2 items-center">
+                                        <select name="ingredients[{{ $index }}][id]" class="w-1/2 border-gray-300 rounded-md shadow-sm">
+                                            <option value="">-- Pilih Bahan --</option>
+                                            @foreach($ingredients as $ingredient)
+                                                <option value="{{ $ingredient->id }}" {{ (isset($mi['ingredient_id']) && $mi['ingredient_id'] == $ingredient->id) || (isset($mi['id']) && $mi['id'] == $ingredient->id) ? 'selected' : '' }}>{{ $ingredient->name }} ({{ $ingredient->unit }})</option>
+                                            @endforeach
+                                        </select>
+                                        <input type="number" name="ingredients[{{ $index }}][quantity]" value="{{ $mi['quantity'] ?? '' }}" class="w-1/3 border-gray-300 rounded-md shadow-sm" placeholder="Jumlah (per porsi)" min="0.01" step="0.01">
+                                        <button type="button" class="text-red-500 hover:text-red-700 remove-ingredient" style="{{ count(old('ingredients', $menu->menuIngredients)) === 1 ? 'display: none;' : '' }}">Hapus</button>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="ingredient-row flex gap-2 mb-2 items-center">
+                                    <select name="ingredients[0][id]" class="w-1/2 border-gray-300 rounded-md shadow-sm">
+                                        <option value="">-- Pilih Bahan --</option>
+                                        @foreach($ingredients as $ingredient)
+                                            <option value="{{ $ingredient->id }}">{{ $ingredient->name }} ({{ $ingredient->unit }})</option>
+                                        @endforeach
+                                    </select>
+                                    <input type="number" name="ingredients[0][quantity]" class="w-1/3 border-gray-300 rounded-md shadow-sm" placeholder="Jumlah (per porsi)" min="0.01" step="0.01">
+                                    <button type="button" class="text-red-500 hover:text-red-700 remove-ingredient" style="display: none;">Hapus</button>
+                                </div>
+                            @endif
+                        </div>
+                        <button type="button" id="add-ingredient" class="mt-2 text-sm text-blue-600 hover:text-blue-800">+ Tambah Bahan</button>
                     </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            let ingredientIndex = {{ count(old('ingredients', $menu->menuIngredients)) > 0 ? count(old('ingredients', $menu->menuIngredients)) : 1 }};
+                            const container = document.getElementById('ingredients-container');
+                            const addButton = document.getElementById('add-ingredient');
+
+                            addButton.addEventListener('click', function() {
+                                const row = document.createElement('div');
+                                row.className = 'ingredient-row flex gap-2 mb-2 items-center';
+                                row.innerHTML = `
+                                    <select name="ingredients[${ingredientIndex}][id]" class="w-1/2 border-gray-300 rounded-md shadow-sm">
+                                        <option value="">-- Pilih Bahan --</option>
+                                        @foreach($ingredients as $ingredient)
+                                            <option value="{{ $ingredient->id }}">{{ $ingredient->name }} ({{ $ingredient->unit }})</option>
+                                        @endforeach
+                                    </select>
+                                    <input type="number" name="ingredients[${ingredientIndex}][quantity]" class="w-1/3 border-gray-300 rounded-md shadow-sm" placeholder="Jumlah (per porsi)" min="0.01" step="0.01">
+                                    <button type="button" class="text-red-500 hover:text-red-700 remove-ingredient">Hapus</button>
+                                `;
+                                container.appendChild(row);
+                                ingredientIndex++;
+                                
+                                updateRemoveButtons();
+                            });
+
+                            container.addEventListener('click', function(e) {
+                                if (e.target.classList.contains('remove-ingredient')) {
+                                    e.target.closest('.ingredient-row').remove();
+                                    updateRemoveButtons();
+                                }
+                            });
+
+                            function updateRemoveButtons() {
+                                const rows = container.querySelectorAll('.ingredient-row');
+                                rows.forEach((row, index) => {
+                                    const btn = row.querySelector('.remove-ingredient');
+                                    if (rows.length === 1) {
+                                        btn.style.display = 'none';
+                                    } else {
+                                        btn.style.display = 'block';
+                                    }
+                                });
+                            }
+                        });
+                    </script>
 
                     <div class="mb-4">
                         <label class="block mb-2 font-medium">

@@ -179,7 +179,6 @@
                                             $statusLabels = [
                                                 'pending' => 'Menunggu',
                                                 'confirmed' => 'Dikonfirmasi',
-                                                'seated' => 'Sudah Duduk',
                                                 'completed' => 'Selesai',
                                                 'no_show' => 'Tidak Datang',
                                             ];
