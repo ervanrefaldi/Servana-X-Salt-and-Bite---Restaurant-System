@@ -1,20 +1,22 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Kelola Karyawan
-            </h2>
+@extends('layouts.pos')
 
-            <a href="{{ route('employees.create') }}"
-               class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
-               style="background-color: #2563eb; color: #ffffff;">
-                Tambah Karyawan
-            </a>
+@section('title', 'Kelola Karyawan - Servana POS')
+
+@section('content')
+<div class="flex-1 flex flex-col h-full overflow-hidden">
+    <!-- Page Header -->
+    <div class="px-8 pt-8 pb-6 flex justify-between items-end border-b border-gray-100 shrink-0">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Employee Directory</h2>
+            <p class="text-gray-500 text-sm">Manage staff profiles, positions, and employment status.</p>
         </div>
-    </x-slot>
+        <a href="{{ route('employees.create') }}" class="px-4 py-2 bg-brand-red text-white rounded-lg text-sm font-medium shadow-sm hover:bg-[#8B121A] transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Add Employee
+        </a>
+    </div>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
 
             @if (session('success'))
                 <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
@@ -148,6 +150,8 @@
                 </p>
             </div>
 
+            </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

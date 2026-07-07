@@ -1,409 +1,378 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Dashboard Kasir / POS
-        </h2>
-    </x-slot>
+@extends('layouts.pos')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+@section('title', 'Kasir POS - Servana POS')
 
-            @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-                    <ul class="list-disc ml-5">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+@section('content')
+<div class="flex-1 flex overflow-hidden bg-gray-50 h-full">
+    
+    <!-- Left Section: Menu Items -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden">
+        
+        <!-- Categories -->
+        <div class="px-8 py-6 flex gap-3 overflow-x-auto shrink-0 hide-scrollbar">
+            <button class="px-6 py-2 bg-brand-red text-white rounded-full text-sm font-semibold shrink-0">All Items</button>
+            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Starters</button>
+            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Mains</button>
+            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Desserts</button>
+            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Beverages</button>
+        </div>
 
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                    <p class="text-sm text-gray-500">Transaksi Hari Ini</p>
-                    <h3 class="text-2xl font-bold">{{ $todayOrders }}</h3>
-                </div>
-
-                <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                    <p class="text-sm text-gray-500">Pendapatan Hari Ini</p>
-                    <h3 class="text-2xl font-bold">
-                        Rp{{ number_format($todayIncome, 0, ',', '.') }}
-                    </h3>
-                </div>
+        @if (session('success'))
+            <div class="mx-8 mb-4 p-3 bg-green-50 text-green-700 text-sm rounded-lg border border-green-100 shrink-0">
+                {{ session('success') }}
             </div>
-
-            <div class="bg-white p-6 shadow-sm sm:rounded-lg mb-6">
-                <h3 class="text-lg font-semibold mb-4">Menu Kasir</h3>
-
-                <div class="flex flex-wrap gap-3">
-
-                    <a href="{{ route('orders.index') }}"
-                       class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
-                       style="background-color: #16a34a; color: #ffffff;">
-                        Kelola Transaksi
-                    </a>
-                </div>
+        @endif
+        @if ($errors->any())
+            <div class="mx-8 mb-4 p-3 bg-red-50 text-red-700 text-sm rounded-lg border border-red-100 shrink-0">
+                <ul class="list-disc ml-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
+        @endif
 
-            <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                <h3 class="text-lg font-semibold mb-4">
-                    POS Kasir
-                </h3>
-
-                <form action="{{ route('orders.store') }}" method="POST">
-                    @csrf
-
-                    <h4 class="font-semibold mb-4">
-                        Pilih Menu
-                    </h4>
-
-                    <div class="space-y-4 mb-6">
-                        @forelse ($menus as $menu)
-                            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center border p-4 rounded-md">
-                                <div class="md:col-span-2">
-                                    <p class="font-semibold">
-                                        {{ $menu->name }}
-                                    </p>
-
-                                    <p class="text-sm text-gray-500">
-                                        {{ $menu->category }} |
-                                        Rp{{ number_format($menu->price, 0, ',', '.') }}
-                                    </p>
-
-                                    <p class="text-sm mt-1">
-                                        Stok:
-                                        @if ($menu->stock > 0)
-                                            <span class="text-green-600 font-semibold">
-                                                {{ $menu->stock }}
-                                            </span>
-                                        @else
-                                            <span class="text-red-600 font-semibold">
-                                                Habis
-                                            </span>
-                                        @endif
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">Harga</p>
-                                    <p class="font-semibold">
-                                        Rp{{ number_format($menu->price, 0, ',', '.') }}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm text-gray-500 mb-1">
-                                        Jumlah
-                                    </label>
-
-                                    <div class="flex items-center gap-2">
-                                        <button type="button"
-                                                class="px-3 py-2 rounded-md shadow"
-                                                style="background-color: #4b5563; color: #ffffff;"
-                                                onclick="decreaseQty({{ $menu->id }})"
-                                                {{ $menu->stock <= 0 ? 'disabled' : '' }}>
-                                            -
-                                        </button>
-
-                                        <input type="number"
-                                               name="quantities[{{ $menu->id }}]"
-                                               id="qty_{{ $menu->id }}"
-                                               value="0"
-                                               min="0"
-                                               max="{{ $menu->stock }}"
-                                               data-price="{{ $menu->price }}"
-                                               data-stock="{{ $menu->stock }}"
-                                               class="w-20 border-gray-300 rounded-md shadow-sm text-center qty-input"
-                                               onchange="validateQty({{ $menu->id }}); updateSummary();"
-                                               {{ $menu->stock <= 0 ? 'readonly' : '' }}>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">Subtotal</p>
-                                    <p class="font-semibold" id="subtotal_{{ $menu->id }}">
-                                        Rp0
-                                    </p>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="p-4 border rounded-md text-center text-gray-500">
-                                Belum ada menu tersedia.
-                            </div>
-                        @endforelse
+        <!-- Menu Grid -->
+        <div class="flex-1 overflow-y-auto px-8 pb-8 custom-scrollbar">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                @forelse ($menus as $menu)
+                <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex flex-col relative group cursor-pointer hover:shadow-md transition-shadow">
+                    <!-- Price Tag -->
+                    <div class="absolute top-5 right-5 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-gray-800 z-10 shadow-sm">
+                        ${{ number_format($menu->price / 15000, 2) }} <!-- Displaying in USD roughly for design parity, actual logic remains Rp -->
+                    </div>
+                    
+                    <!-- Image -->
+                    <div class="aspect-video w-full rounded-xl bg-gray-100 mb-4 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=500&auto=format&fit=crop" alt="{{ $menu->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     </div>
 
-                    <hr class="my-6">
-
-                    <h4 class="font-semibold mb-4">
-                        Data Customer & Pembayaran
-                    </h4>
-
-                    <div class="mb-4">
-                        <label class="block mb-2 font-medium">
-                            Atas Nama
-                        </label>
-
-                        <input type="text"
-                               name="customer_name"
-                               id="customer_name"
-                               class="w-full border-gray-300 rounded-md shadow-sm"
-                               placeholder="Nama customer"
-                               required>
+                    <!-- Details -->
+                    <div class="flex-1 px-1">
+                        <h3 class="font-bold text-gray-900 mb-1 leading-tight">{{ $menu->name }}</h3>
+                        <p class="text-xs text-gray-500 line-clamp-2">{{ $menu->category }} - {{ $menu->stock > 0 ? 'Stock: ' . $menu->stock : 'Out of Stock' }}</p>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block mb-2 font-medium">
-                            Nomor HP
-                        </label>
-
-                        <input type="text"
-                               name="customer_phone"
-                               id="customer_phone"
-                               class="w-full border-gray-300 rounded-md shadow-sm"
-                               placeholder="Opsional">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block mb-2 font-medium">
-                            Status Customer
-                        </label>
-
-                        <select name="customer_type"
-                                id="customer_type"
-                                class="w-full border-gray-300 rounded-md shadow-sm"
-                                required>
-                            <option value="non_member">Non-Member</option>
-                            <option value="member">Member</option>
-                        </select>
-
-                        <p class="text-sm text-gray-500 mt-1">
-                            Jika member, diskon 5% otomatis diterapkan.
-                        </p>
-                    </div>
-
-                    <div class="mb-4" id="member_code_box" style="display: none;">
-                        <label class="block mb-2 font-medium">
-                            Kode Membership
-                        </label>
-
-                        <input type="text"
-                               name="member_code"
-                               id="member_code"
-                               class="w-full border-gray-300 rounded-md shadow-sm"
-                               placeholder="Contoh: MBR002">
-
-                        <p id="member_message" class="text-sm mt-1"></p>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block mb-2 font-medium">
-                            Metode Pembayaran
-                        </label>
-
-                        <select name="payment_method"
-                                class="w-full border-gray-300 rounded-md shadow-sm"
-                                required>
-                            <option value="cash">Cash</option>
-                            <option value="debit">Debit</option>
-                            <option value="qris">QRIS</option>
-                            <option value="transfer">Transfer</option>
-                        </select>
-                    </div>
-
-                    <div class="bg-gray-50 p-4 rounded-lg border mb-6">
-                        <h3 class="font-semibold mb-3">
-                            Ringkasan Pesanan
-                        </h3>
-
-                        <div class="flex justify-between mb-2">
-                            <span>Subtotal</span>
-                            <span id="summary_subtotal">Rp0</span>
-                        </div>
-
-                        <div class="flex justify-between mb-2">
-                            <span>Diskon Member 5%</span>
-                            <span id="summary_discount">Rp0</span>
-                        </div>
-
-                        <div class="flex justify-between font-bold text-lg border-t pt-2">
-                            <span>Total Bayar</span>
-                            <span id="summary_total">Rp0</span>
+                    <!-- Action -->
+                    <div class="mt-4 flex justify-between items-center px-1 pb-1">
+                        <span class="font-bold text-brand-red">Rp{{ number_format($menu->price, 0, ',', '.') }}</span>
+                        
+                        <div class="flex items-center gap-2">
+                            <button type="button" class="w-8 h-8 rounded-full bg-[#FDEAE8] text-brand-red flex items-center justify-center hover:bg-brand-red hover:text-white transition-colors" onclick="decreaseQty({{ $menu->id }})">
+                                -
+                            </button>
+                            <input type="number" 
+                                id="qty_{{ $menu->id }}" 
+                                value="0" 
+                                min="0" 
+                                max="{{ $menu->stock }}" 
+                                data-price="{{ $menu->price }}"
+                                data-stock="{{ $menu->stock }}"
+                                data-name="{{ $menu->name }}"
+                                class="w-10 text-center bg-transparent border-none text-sm font-bold p-0 focus:ring-0 qty-input"
+                                onchange="validateQty({{ $menu->id }}); updateSummary();"
+                                readonly>
+                            <button type="button" class="w-8 h-8 rounded-full bg-[#FDEAE8] text-brand-red flex items-center justify-center hover:bg-brand-red hover:text-white transition-colors" onclick="increaseQty({{ $menu->id }})" {{ $menu->stock <= 0 ? 'disabled' : '' }}>
+                                +
+                            </button>
                         </div>
                     </div>
-
-                    <button type="submit"
-                            class="inline-block px-4 py-3 rounded-md text-sm font-semibold shadow w-full"
-                            style="background-color: #2563eb; color: #ffffff;">
-                        Selesaikan Pemesanan & Tampilkan Invoice
-                    </button>
-                </form>
+                </div>
+                @empty
+                <div class="col-span-full text-center py-12 text-gray-400">Belum ada menu tersedia.</div>
+                @endforelse
             </div>
-
         </div>
     </div>
 
-    <script>
-        function formatRupiah(number) {
-            return 'Rp' + new Intl.NumberFormat('id-ID').format(number);
-        }
+    <!-- Right Section: Cart -->
+    <div class="w-[400px] bg-white border-l border-gray-100 flex flex-col shrink-0">
+        <form action="{{ route('orders.store') }}" method="POST" class="flex flex-col h-full" id="orderForm">
+            @csrf
+            
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex justify-between items-start mb-2">
+                    <h2 class="text-2xl font-bold text-gray-900">Current Order</h2>
+                    <button type="button" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500">Takeaway / Dine-In</p>
+            </div>
 
-        function decreaseQty(menuId) {
-            const input = document.getElementById('qty_' + menuId);
-            let value = parseInt(input.value || 0);
+            <!-- Cart Items -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar" id="cart_items_container">
+                <div class="text-center py-8 text-gray-400 text-sm" id="empty_cart_msg">
+                    No items in cart.
+                </div>
+                <!-- Cart items will be injected here via JS -->
+            </div>
 
-            if (value > 0) {
-                input.value = value - 1;
-            }
+            <!-- Customer & Payment Details (Hidden inputs populated by JS or fixed inputs) -->
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+                
+                <!-- Customer Name & Phone -->
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <input type="text" name="customer_name" id="customer_name" class="w-full border-gray-200 rounded-lg text-sm focus:ring-brand-red focus:border-brand-red" placeholder="Customer Name" required>
+                    <input type="text" name="customer_phone" id="customer_phone" class="w-full border-gray-200 rounded-lg text-sm focus:ring-brand-red focus:border-brand-red" placeholder="Phone (Opt)">
+                </div>
 
+                <div class="flex gap-2 mb-4">
+                    <select name="customer_type" id="customer_type" class="w-1/3 border-gray-200 rounded-lg text-sm focus:ring-brand-red focus:border-brand-red" required>
+                        <option value="non_member">Regular</option>
+                        <option value="member">Member</option>
+                    </select>
+                    <input type="text" name="member_code" id="member_code" class="flex-1 border-gray-200 rounded-lg text-sm focus:ring-brand-red focus:border-brand-red bg-white" placeholder="Member ID or Promo" style="display: none;">
+                    <select name="payment_method" id="payment_method" class="flex-1 border-gray-200 rounded-lg text-sm focus:ring-brand-red focus:border-brand-red" required>
+                        <option value="cash">Cash</option>
+                        <option value="debit">Debit</option>
+                        <option value="qris">QRIS</option>
+                        <option value="transfer">Transfer</option>
+                    </select>
+                </div>
+                <p id="member_message" class="text-xs mt-1 mb-3 text-gray-500 hidden"></p>
+
+                <!-- Hidden inputs for quantities so they submit correctly -->
+                <div id="hidden_quantities"></div>
+
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between text-gray-500">
+                        <span>Subtotal</span>
+                        <span id="summary_subtotal">Rp0</span>
+                    </div>
+                    <div class="flex justify-between text-brand-red">
+                        <span>Member Discount (5%)</span>
+                        <span id="summary_discount">-Rp0</span>
+                    </div>
+                    <!-- Assuming Tax is included or 0, showing it statically for design parity -->
+                    <div class="flex justify-between text-gray-500">
+                        <span>Tax (0%)</span>
+                        <span>Rp0</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-end mt-4 mb-6">
+                    <span class="text-xl font-bold text-gray-900">Total</span>
+                    <span class="text-3xl font-bold text-brand-red" id="summary_total">Rp0</span>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" class="px-4 py-3 border border-gray-200 rounded-xl text-gray-600 font-semibold text-sm hover:bg-gray-100 transition-colors bg-white">
+                        Save for<br>Later
+                    </button>
+                    <button type="submit" class="flex-1 bg-brand-red text-white rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-[#8B121A] transition-colors shadow-md">
+                        Proceed to Payment
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Remove arrows from number input */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+    }
+</style>
+
+@push('scripts')
+<script>
+    function formatRupiah(number) {
+        return 'Rp' + new Intl.NumberFormat('id-ID').format(number);
+    }
+
+    function increaseQty(menuId) {
+        const input = document.getElementById('qty_' + menuId);
+        const stock = parseInt(input.dataset.stock || 0);
+        let value = parseInt(input.value || 0);
+
+        if (value < stock) {
+            input.value = value + 1;
             updateSummary();
         }
+    }
 
-        function validateQty(menuId) {
-            const input = document.getElementById('qty_' + menuId);
-            const stock = parseInt(input.dataset.stock || 0);
-            let value = parseInt(input.value || 0);
+    function decreaseQty(menuId) {
+        const input = document.getElementById('qty_' + menuId);
+        let value = parseInt(input.value || 0);
 
-            if (value < 0) {
-                value = 0;
-            }
-
-            if (value > stock) {
-                value = stock;
-            }
-
-            input.value = value;
+        if (value > 0) {
+            input.value = value - 1;
+            updateSummary();
         }
+    }
 
-        function updateSummary() {
-            let subtotal = 0;
+    function validateQty(menuId) {
+        const input = document.getElementById('qty_' + menuId);
+        const stock = parseInt(input.dataset.stock || 0);
+        let value = parseInt(input.value || 0);
 
-            document.querySelectorAll('.qty-input').forEach(function(input) {
-                const menuId = input.id.replace('qty_', '');
-                const qty = parseInt(input.value || 0);
+        if (value < 0) value = 0;
+        if (value > stock) value = stock;
+
+        input.value = value;
+    }
+
+    function updateSummary() {
+        let subtotal = 0;
+        const cartContainer = document.getElementById('cart_items_container');
+        const emptyMsg = document.getElementById('empty_cart_msg');
+        const hiddenQuantities = document.getElementById('hidden_quantities');
+        
+        // Clear cart display
+        let cartHtml = '';
+        let hiddenHtml = '';
+        let hasItems = false;
+
+        document.querySelectorAll('.qty-input').forEach(function(input) {
+            const menuId = input.id.replace('qty_', '');
+            const qty = parseInt(input.value || 0);
+            
+            if (qty > 0) {
+                hasItems = true;
                 const price = parseFloat(input.dataset.price || 0);
+                const name = input.dataset.name;
                 const itemSubtotal = qty * price;
-
                 subtotal += itemSubtotal;
 
-                const subtotalElement = document.getElementById('subtotal_' + menuId);
+                // Build cart item HTML
+                cartHtml += `
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex gap-3 relative">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-gray-900 text-sm mb-1">${name}</h4>
+                        <p class="text-xs text-gray-500 mb-2">${formatRupiah(price)} x ${qty}</p>
+                        <p class="font-bold text-gray-900">${formatRupiah(itemSubtotal)}</p>
+                    </div>
+                    <div class="flex flex-col items-center justify-between bg-white rounded-lg border border-gray-200 px-1 py-1">
+                        <button type="button" class="w-6 h-6 text-gray-500 hover:text-brand-red flex items-center justify-center" onclick="increaseQty(${menuId})">+</button>
+                        <span class="text-xs font-bold">${qty}</span>
+                        <button type="button" class="w-6 h-6 text-gray-500 hover:text-brand-red flex items-center justify-center" onclick="decreaseQty(${menuId})">-</button>
+                    </div>
+                </div>
+                `;
 
-                if (subtotalElement) {
-                    subtotalElement.textContent = formatRupiah(itemSubtotal);
-                }
-            });
+                // Add hidden inputs for form submission
+                hiddenHtml += `<input type="hidden" name="quantities[${menuId}]" value="${qty}">`;
+            }
+        });
 
-            const customerType = document.getElementById('customer_type').value;
-            const discount = customerType === 'member' ? subtotal * 0.05 : 0;
-            const total = subtotal - discount;
-
-            document.getElementById('summary_subtotal').textContent = formatRupiah(subtotal);
-            document.getElementById('summary_discount').textContent = formatRupiah(discount);
-            document.getElementById('summary_total').textContent = formatRupiah(total);
+        if (hasItems) {
+            emptyMsg.style.display = 'none';
+            // Remove previous items (keep the empty msg hidden)
+            const existingItems = cartContainer.querySelectorAll('.bg-gray-50.rounded-xl');
+            existingItems.forEach(item => item.remove());
+            cartContainer.insertAdjacentHTML('beforeend', cartHtml);
+        } else {
+            emptyMsg.style.display = 'block';
+            const existingItems = cartContainer.querySelectorAll('.bg-gray-50.rounded-xl');
+            existingItems.forEach(item => item.remove());
         }
 
-        function toggleMemberInput() {
-            const customerType = document.getElementById('customer_type').value;
-            const memberBox = document.getElementById('member_code_box');
-            const memberCodeInput = document.getElementById('member_code');
-            const nameInput = document.getElementById('customer_name');
-            const phoneInput = document.getElementById('customer_phone');
-            const message = document.getElementById('member_message');
+        hiddenQuantities.innerHTML = hiddenHtml;
 
-            if (customerType === 'member') {
-                memberBox.style.display = 'block';
+        const customerType = document.getElementById('customer_type').value;
+        const discount = customerType === 'member' ? subtotal * 0.05 : 0;
+        const total = subtotal - discount;
 
-                nameInput.readOnly = true;
-                phoneInput.readOnly = true;
+        document.getElementById('summary_subtotal').textContent = formatRupiah(subtotal);
+        document.getElementById('summary_discount').textContent = '-' + formatRupiah(discount);
+        document.getElementById('summary_total').textContent = formatRupiah(total);
+    }
 
-                nameInput.classList.add('bg-gray-100');
-                phoneInput.classList.add('bg-gray-100');
+    function toggleMemberInput() {
+        const customerType = document.getElementById('customer_type').value;
+        const memberCodeInput = document.getElementById('member_code');
+        const nameInput = document.getElementById('customer_name');
+        const phoneInput = document.getElementById('customer_phone');
+        const message = document.getElementById('member_message');
 
-                message.innerHTML = 'Masukkan kode membership customer.';
-                message.className = 'text-sm mt-1 text-gray-500';
-            } else {
-                memberBox.style.display = 'none';
-                memberCodeInput.value = '';
+        if (customerType === 'member') {
+            memberCodeInput.style.display = 'block';
+            nameInput.readOnly = true;
+            phoneInput.readOnly = true;
+            nameInput.classList.add('bg-gray-100');
+            phoneInput.classList.add('bg-gray-100');
+            
+            message.style.display = 'block';
+            message.innerHTML = 'Masukkan ID Member.';
+            message.className = 'text-xs mt-1 mb-3 text-gray-500';
+        } else {
+            memberCodeInput.style.display = 'none';
+            memberCodeInput.value = '';
+            
+            nameInput.readOnly = false;
+            phoneInput.readOnly = false;
+            nameInput.classList.remove('bg-gray-100');
+            phoneInput.classList.remove('bg-gray-100');
+            
+            nameInput.value = '';
+            phoneInput.value = '';
+            
+            message.style.display = 'none';
+            message.innerHTML = '';
+            
+            updateSummary();
+        }
+    }
 
-                nameInput.readOnly = false;
-                phoneInput.readOnly = false;
+    function checkMemberCode() {
+        const customerType = document.getElementById('customer_type').value;
+        if (customerType !== 'member') return;
 
-                nameInput.classList.remove('bg-gray-100');
-                phoneInput.classList.remove('bg-gray-100');
+        const memberCode = document.getElementById('member_code').value.trim();
+        const nameInput = document.getElementById('customer_name');
+        const phoneInput = document.getElementById('customer_phone');
+        const message = document.getElementById('member_message');
 
-                nameInput.value = '';
-                phoneInput.value = '';
-
-                message.innerHTML = '';
-
-                updateSummary();
-            }
+        if (memberCode.length < 3) {
+            nameInput.value = '';
+            phoneInput.value = '';
+            message.innerHTML = 'Masukkan ID Member.';
+            message.className = 'text-xs mt-1 mb-3 text-gray-500';
+            updateSummary();
+            return;
         }
 
-        function checkMemberCode() {
-            const customerType = document.getElementById('customer_type').value;
-
-            if (customerType !== 'member') {
-                return;
-            }
-
-            const memberCode = document.getElementById('member_code').value.trim();
-            const nameInput = document.getElementById('customer_name');
-            const phoneInput = document.getElementById('customer_phone');
-            const message = document.getElementById('member_message');
-
-            if (memberCode.length < 3) {
-                nameInput.value = '';
-                phoneInput.value = '';
-                message.innerHTML = 'Masukkan kode membership customer.';
-                message.className = 'text-sm mt-1 text-gray-500';
-                updateSummary();
-                return;
-            }
-
-            fetch(`/orders/check-member/${encodeURIComponent(memberCode)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        nameInput.value = data.customer.name;
-                        phoneInput.value = data.customer.phone ?? '';
-
-                        message.innerHTML = 'Member ditemukan. Diskon 5% otomatis diterapkan.';
-                        message.className = 'text-sm mt-1 text-green-600';
-                    } else {
-                        nameInput.value = '';
-                        phoneInput.value = '';
-
-                        message.innerHTML = 'Kode membership tidak ditemukan.';
-                        message.className = 'text-sm mt-1 text-red-600';
-                    }
-
-                    updateSummary();
-                })
-                .catch(() => {
+        fetch(`/orders/check-member/${encodeURIComponent(memberCode)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    nameInput.value = data.customer.name;
+                    phoneInput.value = data.customer.phone ?? '';
+                    message.innerHTML = 'Member ditemukan. Diskon 5%.';
+                    message.className = 'text-xs mt-1 mb-3 text-green-600';
+                } else {
                     nameInput.value = '';
                     phoneInput.value = '';
+                    message.innerHTML = 'Member tidak ditemukan.';
+                    message.className = 'text-xs mt-1 mb-3 text-red-600';
+                }
+                updateSummary();
+            })
+            .catch(() => {
+                nameInput.value = '';
+                phoneInput.value = '';
+                message.innerHTML = 'Member tidak ditemukan.';
+                message.className = 'text-xs mt-1 mb-3 text-red-600';
+                updateSummary();
+            });
+    }
 
-                    message.innerHTML = 'Kode membership tidak ditemukan.';
-                    message.className = 'text-sm mt-1 text-red-600';
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('customer_type').addEventListener('change', toggleMemberInput);
+        document.getElementById('member_code').addEventListener('keyup', checkMemberCode);
+        document.getElementById('member_code').addEventListener('change', checkMemberCode);
 
-                    updateSummary();
-                });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('customer_type').addEventListener('change', toggleMemberInput);
-            document.getElementById('member_code').addEventListener('keyup', checkMemberCode);
-            document.getElementById('member_code').addEventListener('change', checkMemberCode);
-
-            toggleMemberInput();
-            updateSummary();
-        });
-    </script>
-</x-app-layout>
+        toggleMemberInput();
+        updateSummary();
+    });
+</script>
+@endpush
+@endsection

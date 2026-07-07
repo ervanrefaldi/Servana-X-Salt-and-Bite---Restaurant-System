@@ -7,6 +7,8 @@ use App\Models\Reservation;
 use App\Models\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ReservationController extends Controller
 {
@@ -190,6 +192,8 @@ class ReservationController extends Controller
                 'note' => $request->note,
             ]);
 
+            $this->sendWhatsAppNotification($reservation);
+
             return redirect()->route('reservations.create')
                 ->with('success', 'Reservasi berhasil dibuat. Kode reservasi Anda: ' . $reservation->reservation_code);
         }
@@ -252,6 +256,8 @@ class ReservationController extends Controller
         | yang muncul hanya kode reservasi, bukan form baru.
         */
         session()->put('guest_reservation_id', $reservation->id);
+
+        $this->sendWhatsAppNotification($reservation);
 
         return redirect()->route('reservations.create')
             ->with('success', 'Reservasi berhasil dibuat. Kode reservasi Anda: ' . $reservation->reservation_code);
@@ -346,5 +352,32 @@ class ReservationController extends Controller
         } while (Reservation::where('reservation_code', $code)->exists());
 
         return $code;
+    }
+
+    private function sendWhatsAppNotification(Reservation $reservation)
+    {
+        $token = env('FONNTE_TOKEN');
+        
+        $reservation->load('table');
+
+        $message = "*DATA RESERVASI SERVANA*\n\n"
+            . "*Kode Reservasi*: " . $reservation->reservation_code . "\n"
+            . "*Nama*: " . $reservation->customer_name . "\n"
+            . "*Telepon*: " . $reservation->customer_phone . "\n"
+            . "*Tanggal*: " . \Carbon\Carbon::parse($reservation->reservation_date)->translatedFormat('d F Y') . "\n"
+            . "*Waktu*: " . $reservation->start_time . " - " . $reservation->end_time . "\n"
+            . "*Jumlah Tamu*: " . $reservation->total_guest . " Orang\n"
+            . "*Meja*: " . ($reservation->table ? 'Meja ' . $reservation->table->table_number : '-') . "\n"
+            . "*Catatan*: " . ($reservation->note ?? '-') . "\n\n"
+            . "Terima kasih telah memilih Servana. Kami tunggu kedatangan Anda!";
+
+        $response = Http::withHeaders([
+            'Authorization' => $token,
+        ])->post('https://api.fonnte.com/send', [
+            'target' => $reservation->customer_phone,
+            'message' => $message,
+        ]);
+
+        Log::info('Fonnte API Response: ' . $response->body());
     }
 }

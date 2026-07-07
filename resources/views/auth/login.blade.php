@@ -38,7 +38,7 @@
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox"
-                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
+                    class="rounded border-gray-300 text-[#a01a1d] shadow-sm focus:ring-[#a01a1d]" name="remember">
 
                 <span class="ms-2 text-sm text-gray-600">
                     Remember me
@@ -68,8 +68,7 @@
         </p>
 
         <a href="{{ route('register') }}"
-            class="block w-full text-center px-4 py-3 rounded-md font-semibold text-sm transition shadow"
-            style="background-color: #16a34a; color: white;">
+            class="block w-full text-center px-4 py-3 rounded-md font-semibold text-sm transition border border-[#a01a1d] text-[#a01a1d] hover:bg-[#a01a1d] hover:text-white">
             Daftar Sebagai Member
         </a>
 

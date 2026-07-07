@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
 {
@@ -49,7 +50,13 @@ class MenuController extends Controller
             'ingredients' => 'nullable|array',
             'ingredients.*.id' => 'required|exists:ingredients,id',
             'ingredients.*.quantity' => 'required|numeric|min:0.01',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('menus', 'public');
+        }
 
         $menu = Menu::create([
             'name' => $request->name,
@@ -57,7 +64,7 @@ class MenuController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'stock' => 0,
-            'image' => null,
+            'image' => $imagePath,
             'is_available' => $request->is_available,
         ]);
 
@@ -103,15 +110,25 @@ class MenuController extends Controller
             'ingredients' => 'nullable|array',
             'ingredients.*.id' => 'required|exists:ingredients,id',
             'ingredients.*.quantity' => 'required|numeric|min:0.01',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $menu->update([
+        $menuData = [
             'name' => $request->name,
             'category' => $request->category,
             'description' => $request->description,
             'price' => $request->price,
             'is_available' => $request->is_available,
-        ]);
+        ];
+
+        if ($request->hasFile('image')) {
+            if ($menu->image) {
+                Storage::disk('public')->delete($menu->image);
+            }
+            $menuData['image'] = $request->file('image')->store('menus', 'public');
+        }
+
+        $menu->update($menuData);
 
         $menu->menuIngredients()->delete();
 
@@ -130,6 +147,10 @@ class MenuController extends Controller
 
     public function destroy(Menu $menu)
     {
+        if ($menu->image) {
+            Storage::disk('public')->delete($menu->image);
+        }
+
         $menu->delete();
 
         return redirect()->route('menus.index')

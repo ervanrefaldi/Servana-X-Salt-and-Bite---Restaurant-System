@@ -1,21 +1,25 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Tambah Bahan
-            </h2>
+@extends('layouts.pos')
 
-            <a href="{{ route('ingredients.index') }}"
-               class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
-               style="background-color: #4b5563; color: #ffffff;">
-                Kembali ke Kelola Bahan
+@section('title', 'Tambah Bahan - Servana POS')
+
+@section('content')
+<div class="flex-1 flex flex-col h-full overflow-hidden">
+    <!-- Page Header -->
+    <div class="px-8 pt-8 pb-6 flex justify-between items-end border-b border-gray-100 shrink-0">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Tambah Bahan</h2>
+            <p class="text-gray-500 text-sm">Tambahkan bahan baku baru ke dalam inventori dapur.</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ route('ingredients.index') }}" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium shadow-sm hover:bg-gray-50 transition-colors flex items-center gap-2">
+                Batal
             </a>
         </div>
-    </x-slot>
+    </div>
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white p-6 shadow-sm sm:rounded-lg">
+    <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-white p-8 shadow-sm border border-gray-100 rounded-2xl">
 
                 @if ($errors->any())
                     <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
@@ -92,15 +96,13 @@
 
                     <div class="flex justify-between items-center mt-6">
                         <a href="{{ route('ingredients.index') }}"
-                           class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
-                           style="background-color: #4b5563; color: #ffffff;">
-                            Back
+                           class="inline-block px-6 py-2.5 rounded-lg text-sm font-medium transition-colors bg-white border border-gray-200 text-gray-700 hover:bg-gray-50">
+                            Kembali
                         </a>
 
                         <button type="submit"
-                                class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
-                                style="background-color: #2563eb; color: #ffffff;">
-                            Simpan
+                                class="inline-block px-6 py-2.5 rounded-lg text-sm font-medium transition-colors bg-brand-red text-white hover:bg-[#8B121A] shadow-sm">
+                            Simpan Bahan
                         </button>
                     </div>
                 </form>
@@ -108,4 +110,5 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

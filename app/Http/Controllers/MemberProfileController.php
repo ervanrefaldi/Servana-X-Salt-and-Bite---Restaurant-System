@@ -12,7 +12,17 @@ class MemberProfileController extends Controller
 {
     public function index()
     {
-        $customer = Customer::where('user_id', auth()->id())->firstOrFail();
+        $user = auth()->user();
+        $customer = Customer::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone ?? '-',
+                'is_member' => true,
+                'member_code' => 'MBR' . str_pad(Customer::max('id') + 1, 3, '0', STR_PAD_LEFT),
+            ]
+        );
 
         $orders = Order::with(['details.menu'])
             ->where('customer_id', $customer->id)
@@ -35,7 +45,10 @@ class MemberProfileController extends Controller
     {
         $user = auth()->user();
 
-        $customer = Customer::where('user_id', $user->id)->firstOrFail();
+        $customer = Customer::where('user_id', $user->id)->first();
+        if (!$customer) {
+            abort(404, 'Data customer tidak ditemukan.');
+        }
 
         $request->validate([
             'email' => [
@@ -79,7 +92,10 @@ class MemberProfileController extends Controller
 
     public function invoice(Order $order)
     {
-        $customer = Customer::where('user_id', auth()->id())->firstOrFail();
+        $customer = Customer::where('user_id', auth()->id())->first();
+        if (!$customer) {
+            abort(404, 'Data customer tidak ditemukan.');
+        }
 
         if ($order->customer_id !== $customer->id) {
             abort(403, 'Anda tidak memiliki akses ke invoice ini.');

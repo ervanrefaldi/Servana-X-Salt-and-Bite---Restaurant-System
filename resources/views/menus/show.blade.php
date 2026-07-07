@@ -18,6 +18,15 @@
             <div class="bg-white p-6 shadow-sm sm:rounded-lg">
 
                 <div class="mb-4">
+                    <p class="text-sm text-gray-500">Foto</p>
+                    @if($menu->image)
+                        <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" class="mt-2 w-48 h-48 object-cover rounded-md shadow-sm">
+                    @else
+                        <p class="text-lg text-gray-400 italic">Belum ada foto</p>
+                    @endif
+                </div>
+
+                <div class="mb-4">
                     <p class="text-sm text-gray-500">Nama Menu</p>
                     <p class="text-lg font-semibold">{{ $menu->name }}</p>
                 </div>

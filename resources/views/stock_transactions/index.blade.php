@@ -1,20 +1,28 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Riwayat Transaksi Stok
-            </h2>
+@extends('layouts.pos')
 
-            <a href="{{ route('dapur.dashboard') }}"
-               class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
-               style="background-color: #2563eb; color: #ffffff;">
-                Kembali ke Dashboard Dapur
+@section('title', 'Riwayat Transaksi Stok - Servana POS')
+
+@section('content')
+<div class="flex-1 flex flex-col h-full overflow-hidden">
+    <!-- Page Header -->
+    <div class="px-8 pt-8 pb-6 flex justify-between items-end border-b border-gray-100 shrink-0">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Stock Transactions</h2>
+            <p class="text-gray-500 text-sm">View history of stock in/out and purchase requests.</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ route('ingredients.index') }}" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium shadow-sm hover:bg-gray-50 transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                Manage Ingredients
+            </a>
+            <a href="{{ route('stock-transactions.create') }}" class="px-4 py-2 bg-brand-red text-white rounded-lg text-sm font-medium shadow-sm hover:bg-[#8B121A] transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                New Request
             </a>
         </div>
-    </x-slot>
+    </div>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
 
             @if (session('success'))
                 <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
@@ -53,20 +61,6 @@
                         Rp{{ number_format($totalPurchaseCost, 0, ',', '.') }}
                     </h3>
                 </div>
-            </div>
-
-            <div class="mb-4 flex justify-between items-center">
-                <a href="{{ route('ingredients.index') }}"
-                   class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
-                   style="background-color: #4b5563; color: #ffffff;">
-                    Kelola Bahan
-                </a>
-
-                <a href="{{ route('stock-transactions.create') }}"
-                   class="inline-block px-4 py-2 rounded-md text-sm font-semibold shadow"
-                   style="background-color: #16a34a; color: #ffffff;">
-                    Tambah Transaksi Stok
-                </a>
             </div>
 
             <div class="bg-white shadow-sm sm:rounded-lg overflow-hidden">
@@ -168,6 +162,8 @@
                 </table>
             </div>
 
+            </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

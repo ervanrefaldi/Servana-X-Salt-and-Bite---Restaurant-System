@@ -1,16 +1,20 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Manajemen Reservasi
-            </h2>
+@extends('layouts.pos')
 
-            <a href="{{ route('dashboard') }}"
-                class="px-4 py-2 bg-gray-600 text-white rounded-md text-sm hover:bg-gray-700">
-                Back
-            </a>
+@section('title', 'Manajemen Reservasi - Servana POS')
+
+@section('content')
+<div class="flex-1 flex flex-col h-full">
+    <!-- Page Header -->
+    <div class="px-8 pt-8 pb-6 flex justify-between items-end border-b border-gray-100">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Manajemen Reservasi</h2>
+            <p class="text-gray-500 text-sm">Lihat semua riwayat reservasi pelanggan Anda.</p>
         </div>
-    </x-slot>
+        <a href="{{ route('reservations.create') }}" class="px-4 py-2 bg-brand-red text-white rounded-lg text-sm font-medium shadow-sm hover:bg-[#8B121A] transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            New Reservation
+        </a>
+    </div>
 
     @php
         $statusLabels = [
@@ -41,22 +45,7 @@
                     {{ session('error') }}
                 </div>
             @endif
-            <form method="GET" action="{{ route('reservations.index') }}" class="mb-6">
-                <div class="flex gap-3">
-                    <input type="text" name="search" value="{{ $search ?? '' }}"
-                        placeholder="Cari kode reservasi, nama customer, nomor HP, status..."
-                        class="w-full border-gray-300 rounded-md shadow-sm">
 
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        Cari
-                    </button>
-
-                    <a href="{{ route('reservations.index') }}"
-                        class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
-                        Reset
-                    </a>
-                </div>
-            </form>
             <div class="bg-white shadow-sm sm:rounded-lg overflow-hidden">
                 <table class="w-full border-collapse">
                     <thead>
@@ -183,6 +172,8 @@
                 </table>
             </div>
 
+            </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

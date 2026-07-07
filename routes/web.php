@@ -26,7 +26,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $featuredMenus = \App\Models\Menu::where('is_available', true)->take(3)->get();
+    $heroMenu = \App\Models\Menu::where('name', 'like', '%burger%')->first();
+    return view('welcome', compact('featuredMenus', 'heroMenu'));
 });
 
 Route::get('/menu', [MenuController::class, 'publicMenu'])
