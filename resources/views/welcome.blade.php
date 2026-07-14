@@ -13,6 +13,7 @@
         .text-red-doff { color: #991B1B; }
         .border-red-doff { border-color: #991B1B; }
     </style>
+    @include('partials.favicon')
 </head>
 <body class="bg-[#faf9f8] text-gray-800 antialiased">
 
@@ -28,12 +29,12 @@
                 </div>
                 
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-gray-900 leading-[1.1] mb-4 md:mb-6">
-                    Elevating the art of <br class="hidden sm:block">
-                    <span class="text-red-doff italic">modern dining.</span>
+                    Sistem manajemen restoran <br class="hidden sm:block">
+                    <span class="text-red-doff italic">terintegrasi.</span>
                 </h1>
                 
                 <p class="text-base md:text-lg text-gray-600 mb-6 md:mb-8 max-w-lg leading-relaxed">
-                    Experience precision, passion, and unparalleled service in a space designed for culinary excellence. Your table awaits.
+                    SERVANA adalah platform yang menyatukan reservasi, pemesanan, kasir, dapur, stok, keuangan, keanggotaan, dan SDM dalam satu sistem untuk membantu operasional restoran berjalan lebih mudah dan terorganisir.
                 </p>
                 
                 <div class="flex flex-wrap gap-3 md:gap-4">
@@ -109,12 +110,9 @@
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="md:col-span-1">
-                    <a href="{{ url('/') }}" class="flex items-center gap-2 mb-4">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-                        </svg>
-                        <span class="text-xl font-bold tracking-tight">Servana</span>
-                    </a>
+                    <div class="mb-4 inline-flex rounded-lg bg-white p-2">
+                        <x-servana-logo variant="compact" :href="url('/')" class="h-16 w-auto max-w-40" />
+                    </div>
                     <p class="text-gray-400 text-sm">Redefining modern hospitality with precision, passion, and elegance.</p>
                 </div>
                 

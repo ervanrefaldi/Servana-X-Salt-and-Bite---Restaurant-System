@@ -2,13 +2,8 @@
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
         <!-- Logo -->
-        <div>
-            <a href="{{ url('/') }}" class="flex items-center gap-2 group">
-                <svg class="w-6 h-6 text-[#991B1B]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-                </svg>
-                <span class="text-xl font-bold text-gray-900 tracking-tight group-hover:text-[#991B1B] transition-colors">Servana</span>
-            </a>
+        <div class="shrink-0">
+            <x-servana-logo variant="compact" :href="url('/')" class="h-10 md:h-14 w-auto max-w-28 md:max-w-40" />
         </div>
 
         <!-- Desktop Menu Links -->

@@ -1,13 +1,7 @@
 <aside class="w-64 border-r border-gray-100 flex flex-col bg-[#FDFDFD]">
     <!-- Logo Area -->
-    <div class="p-6 flex items-center gap-3">
-        <div class="w-10 h-10 bg-brand-red rounded flex items-center justify-center text-white font-bold text-lg">
-            S
-        </div>
-        <div>
-            <h1 class="font-bold text-gray-900 leading-tight">Servana<br>POS</h1>
-            <p class="text-[10px] text-gray-500 uppercase tracking-wider">Management Suite</p>
-        </div>
+    <div class="px-6 pt-5 pb-3 flex justify-center">
+        <x-servana-logo variant="compact" :href="route('dashboard')" class="max-h-24 w-auto max-w-[170px]" />
     </div>
 
     <!-- Navigation -->

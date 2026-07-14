@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Laporan Keuangan Servana</title>
+    @include('partials.favicon')
 
     <style>
         body {
@@ -14,6 +15,14 @@
         .header {
             text-align: center;
             margin-bottom: 20px;
+        }
+
+        .header-logo {
+            width: auto;
+            height: 100px;
+            max-width: 160px;
+            object-fit: contain;
+            margin-bottom: 8px;
         }
 
         .header h2 {
@@ -77,6 +86,7 @@
     </div>
 
     <div class="header">
+        <img class="header-logo" src="{{ asset('images/logo/servana-logo.png') }}" alt="Logo SERVANA">
         <h2>Laporan Keuangan Servana</h2>
         <p>Dicetak pada: {{ now()->format('d-m-Y H:i') }}</p>
 

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Invoice - Servana</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.favicon')
 </head>
 
 <body class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-[#991B1B] selection:text-white">
@@ -33,12 +34,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-gray-100 pb-8 mb-8 gap-6">
                     <div>
                         <div class="flex items-center gap-3 mb-2">
-                            <div class="w-10 h-10 bg-[#FDEAE8] text-[#991B1B] rounded-xl flex items-center justify-center print:border print:border-[#991B1B]">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-                                </svg>
-                            </div>
-                            <h3 class="text-3xl font-extrabold text-gray-900 tracking-tight">Servana</h3>
+                            <x-servana-logo variant="compact" class="h-24 w-auto max-w-32 print:h-20" />
                         </div>
                         <p class="text-sm text-gray-500 font-medium uppercase tracking-wider">Premium Dining Experience</p>
                     </div>

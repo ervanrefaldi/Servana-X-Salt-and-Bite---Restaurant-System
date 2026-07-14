@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Member Profile - Servana</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.favicon')
 </head>
 
 <body class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-[#991B1B] selection:text-white">
