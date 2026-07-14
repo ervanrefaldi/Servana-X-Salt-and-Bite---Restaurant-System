@@ -99,5 +99,39 @@ class AdditionalMenuSeeder extends Seeder
         MenuIngredient::create(['menu_id' => $steak->id, 'ingredient_id' => $dagingSapi->id, 'quantity' => 0.2]); // 200g
         MenuIngredient::create(['menu_id' => $steak->id, 'ingredient_id' => $bumbuSteak->id, 'quantity' => 0.05]);
         MenuIngredient::create(['menu_id' => $steak->id, 'ingredient_id' => $kentang->id, 'quantity' => 0.15]);
+
+        // 6. Chocolate Lava Cake
+        $tepungCokelat = Ingredient::firstOrCreate(['name' => 'Tepung Cokelat'], ['category' => 'Bahan Dessert', 'unit' => 'kg', 'current_stock' => 10, 'minimum_stock' => 2]);
+        $darkChocolate = Ingredient::firstOrCreate(['name' => 'Dark Chocolate'], ['category' => 'Bahan Dessert', 'unit' => 'kg', 'current_stock' => 8, 'minimum_stock' => 2]);
+        $butter = Ingredient::firstOrCreate(['name' => 'Butter'], ['category' => 'Bahan Dessert', 'unit' => 'kg', 'current_stock' => 6, 'minimum_stock' => 1]);
+
+        $lavaCake = Menu::create([
+            'name' => 'Chocolate Lava Cake',
+            'category' => 'Dessert',
+            'description' => 'Kue cokelat hangat dengan lelehan cokelat di bagian tengah.',
+            'price' => 28000,
+            'is_available' => true,
+        ]);
+
+        MenuIngredient::create(['menu_id' => $lavaCake->id, 'ingredient_id' => $tepungCokelat->id, 'quantity' => 0.08]);
+        MenuIngredient::create(['menu_id' => $lavaCake->id, 'ingredient_id' => $darkChocolate->id, 'quantity' => 0.05]);
+        MenuIngredient::create(['menu_id' => $lavaCake->id, 'ingredient_id' => $butter->id, 'quantity' => 0.03]);
+
+        // 7. Panna Cotta Berry
+        $gelatin = Ingredient::firstOrCreate(['name' => 'Gelatin'], ['category' => 'Bahan Dessert', 'unit' => 'kg', 'current_stock' => 3, 'minimum_stock' => 0.5]);
+        $krim = Ingredient::firstOrCreate(['name' => 'Krim Cair'], ['category' => 'Bahan Dessert', 'unit' => 'liter', 'current_stock' => 12, 'minimum_stock' => 2]);
+        $sausBerry = Ingredient::firstOrCreate(['name' => 'Saus Berry'], ['category' => 'Bahan Dessert', 'unit' => 'liter', 'current_stock' => 6, 'minimum_stock' => 1]);
+
+        $pannaCotta = Menu::create([
+            'name' => 'Panna Cotta Berry',
+            'category' => 'Dessert',
+            'description' => 'Panna cotta lembut dengan saus berry segar.',
+            'price' => 26000,
+            'is_available' => true,
+        ]);
+
+        MenuIngredient::create(['menu_id' => $pannaCotta->id, 'ingredient_id' => $gelatin->id, 'quantity' => 0.01]);
+        MenuIngredient::create(['menu_id' => $pannaCotta->id, 'ingredient_id' => $krim->id, 'quantity' => 0.15]);
+        MenuIngredient::create(['menu_id' => $pannaCotta->id, 'ingredient_id' => $sausBerry->id, 'quantity' => 0.04]);
     }
 }
