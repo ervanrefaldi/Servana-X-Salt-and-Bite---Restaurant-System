@@ -17,8 +17,8 @@
 <!-- Page Header -->
 <div class="px-8 pt-8 pb-6 flex justify-between items-end">
     <div>
-        <h2 class="text-4xl font-bold text-gray-900 tracking-tight mb-2">Reservations Overview</h2>
-        <p class="text-gray-500 text-sm">Manage today's floor flow and upcoming bookings.</p>
+        <h2 class="text-4xl font-bold text-gray-900 tracking-tight mb-2">Ringkasan Reservasi</h2>
+        <p class="text-gray-500 text-sm">Kelola alur meja hari ini dan reservasi mendatang.</p>
     </div>
     <div class="flex gap-3">
         <button class="px-4 py-2 border border-gray-200 bg-white text-gray-700 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-gray-50 shadow-sm">
@@ -52,7 +52,7 @@
             <div class="flex justify-between items-center mb-4 px-2">
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-gray-400"></span>
-                    <h3 class="font-bold text-gray-800">Pending</h3>
+                    <h3 class="font-bold text-gray-800">Menunggu</h3>
                 </div>
                 <span class="px-2 py-0.5 rounded-full bg-[#EFDFDB] text-brand-red text-xs font-bold">{{ $pending->count() }}</span>
             </div>
@@ -80,7 +80,7 @@
                         @csrf
                         @method('PATCH')
                         <input type="hidden" name="status" value="confirmed">
-                        <button type="submit" class="w-full py-2 bg-[#FDEAE8] text-brand-red rounded-lg text-xs font-semibold hover:bg-[#FADBD8] transition-colors">Confirm</button>
+                        <button type="submit" class="w-full py-2 bg-[#FDEAE8] text-brand-red rounded-lg text-xs font-semibold hover:bg-[#FADBD8] transition-colors">Konfirmasi</button>
                     </form>
                 </div>
                 @empty
@@ -94,7 +94,7 @@
             <div class="flex justify-between items-center mb-4 px-2">
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-brand-red"></span>
-                    <h3 class="font-bold text-gray-800">Confirmed</h3>
+                    <h3 class="font-bold text-gray-800">Dikonfirmasi</h3>
                 </div>
                 <span class="px-2 py-0.5 rounded-full bg-[#EFDFDB] text-brand-red text-xs font-bold">{{ $confirmed->count() }}</span>
             </div>
@@ -106,7 +106,7 @@
                 @endphp
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-l-4 border-l-brand-red border-y-gray-100 border-r-gray-100 relative">
                     @if($isLate)
-                    <div class="absolute top-0 right-4 -translate-y-1/2 bg-brand-red text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">Late</div>
+                    <div class="absolute top-0 right-4 -translate-y-1/2 bg-brand-red text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">Terlambat</div>
                     @endif
                     <div class="flex justify-between items-start mb-3">
                         <div>
@@ -131,13 +131,13 @@
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="status" value="completed">
-                            <button type="submit" class="w-full py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-semibold hover:bg-gray-50 transition-colors" {{ now()->lessThan(\Carbon\Carbon::parse($res->reservation_date . ' ' . $res->start_time)) ? 'disabled' : '' }}>Seat</button>
+                            <button type="submit" class="w-full py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-semibold hover:bg-gray-50 transition-colors" {{ now()->lessThan(\Carbon\Carbon::parse($res->reservation_date . ' ' . $res->start_time)) ? 'disabled' : '' }}>Tempatkan</button>
                         </form>
                         <form action="{{ route('reservations.updateStatus', $res) }}" method="POST" class="w-24">
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="status" value="no_show">
-                            <button type="submit" class="w-full py-2 bg-[#FDEAE8] text-brand-red rounded-lg text-xs font-semibold hover:bg-[#FADBD8] transition-colors">No Show</button>
+                            <button type="submit" class="w-full py-2 bg-[#FDEAE8] text-brand-red rounded-lg text-xs font-semibold hover:bg-[#FADBD8] transition-colors">Tidak Hadir</button>
                         </form>
                     </div>
                 </div>
@@ -152,7 +152,7 @@
             <div class="flex justify-between items-center mb-4 px-2">
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-gray-400"></span>
-                    <h3 class="font-bold text-gray-800">Arrived & Seated</h3>
+                    <h3 class="font-bold text-gray-800">Tiba & Ditempatkan</h3>
                 </div>
                 <span class="px-2 py-0.5 rounded-full bg-[#EFDFDB] text-brand-red text-xs font-bold">{{ $completed->count() }}</span>
             </div>

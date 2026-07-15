@@ -107,7 +107,14 @@
 
                     <div class="space-y-4">
                         @forelse ($menus as $menu)
-                            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center border p-4 rounded-md">
+                            <div class="grid grid-cols-1 md:grid-cols-6 gap-4 items-center border p-4 rounded-md">
+                                <div class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100">
+                                    @if ($menu->has_image)
+                                        <img src="{{ $menu->image_url }}" alt="{{ $menu->name }}" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center p-2 text-center text-[10px] text-gray-400">Gambar Belum Tersedia</div>
+                                    @endif
+                                </div>
                                 <div class="md:col-span-2">
                                     <p class="font-semibold">
                                         {{ $menu->name }}

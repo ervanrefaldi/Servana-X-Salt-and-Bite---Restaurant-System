@@ -1,11 +1,11 @@
 <x-guest-layout>
     <div class="mb-4 text-center">
         <h2 class="text-xl font-semibold text-gray-800">
-            Buat Password Baru
+            Buat Kata Sandi Baru
         </h2>
 
         <p class="text-sm text-gray-600 mt-2">
-            Masukkan password baru untuk akun:
+            Masukkan kata sandi baru untuk akun:
         </p>
 
         <p class="font-semibold text-gray-800 mt-1">
@@ -33,7 +33,7 @@
         @csrf
 
         <div>
-            <x-input-label for="password" value="Password Baru" />
+            <x-input-label for="password" value="Kata Sandi Baru" />
 
             <x-text-input id="password"
                           class="block mt-1 w-full"
@@ -45,7 +45,7 @@
         </div>
 
         <div class="mt-4">
-            <x-input-label for="password_confirmation" value="Konfirmasi Password Baru" />
+            <x-input-label for="password_confirmation" value="Konfirmasi Kata Sandi Baru" />
 
             <x-text-input id="password_confirmation"
                           class="block mt-1 w-full"
@@ -57,11 +57,11 @@
         <div class="flex items-center justify-between mt-4">
             <a href="{{ route('login') }}"
                class="underline text-sm text-gray-600 hover:text-gray-900">
-                Kembali ke Login
+                Kembali ke Masuk
             </a>
 
             <x-primary-button>
-                Simpan Password
+                Simpan Kata Sandi
             </x-primary-button>
         </div>
     </form>

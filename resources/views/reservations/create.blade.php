@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Book a Table - Servana</title>
+    <title>Reservasi Meja - SERVANA</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @include('partials.favicon')
 </head>
@@ -17,7 +17,7 @@
 
             <div class="text-center mb-10">
                 <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
-                    Book a <span class="text-[#991B1B]">Table</span>
+                    Reservasi <span class="text-[#991B1B]">Meja</span>
                 </h1>
                 <p class="text-gray-500 mt-3 text-lg max-w-2xl mx-auto">
                     Reservations are available from 09:00 to 19:00 with a duration of 60 minutes. Please book at least one day in advance.
@@ -73,31 +73,31 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left mb-8">
                         <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Name</p>
+                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Nama</p>
                             <p class="font-bold text-gray-900">{{ $activeReservation->customer_name }}</p>
                         </div>
 
                         <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Phone</p>
+                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Telepon</p>
                             <p class="font-bold text-gray-900">{{ $activeReservation->customer_phone }}</p>
                         </div>
 
                         <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Date</p>
+                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Tanggal</p>
                             <p class="font-bold text-gray-900">
                                 {{ \Carbon\Carbon::parse($activeReservation->reservation_date)->format('d M Y') }}
                             </p>
                         </div>
 
                         <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Time</p>
+                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Waktu</p>
                             <p class="font-bold text-gray-900">
                                 {{ \Carbon\Carbon::parse($activeReservation->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($activeReservation->end_time)->format('H:i') }}
                             </p>
                         </div>
 
                         <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Guests & Table</p>
+                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Tamu & Meja</p>
                             <p class="font-bold text-gray-900">
                                 {{ $activeReservation->total_guest }} Pax
                                 @if ($activeReservation->table)
@@ -163,7 +163,7 @@
                                     class="w-full border-gray-200 rounded-xl shadow-sm focus:border-[#991B1B] focus:ring focus:ring-[#991B1B] focus:ring-opacity-20 transition-all {{ $isMember ? 'bg-gray-50 text-gray-500' : '' }}"
                                     {{ $isMember ? 'readonly' : '' }} required placeholder="Enter your full name">
                                 @if ($isMember)
-                                    <p class="text-xs text-gray-500 mt-2">Linked to member profile.</p>
+                                    <p class="text-xs text-gray-500 mt-2">Terhubung ke profil member.</p>
                                 @endif
                             </div>
 
@@ -232,7 +232,7 @@
                                     <select name="table_id" id="table_id" class="w-full border-gray-200 rounded-xl shadow-sm focus:border-[#991B1B] focus:ring focus:ring-[#991B1B] focus:ring-opacity-20 transition-all bg-yellow-50" required>
                                         <option value="">-- Select Date & Time First --</option>
                                     </select>
-                                    <p class="text-xs text-yellow-600 mt-2 font-medium">As a member, you can choose your exact table.</p>
+                                    <p class="text-xs text-yellow-600 mt-2 font-medium">Sebagai member, Anda dapat memilih meja secara langsung.</p>
                                 </div>
                             @else
                                 <div>
@@ -242,7 +242,7 @@
                                     <div class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500 text-sm">
                                         Auto-assigned based on availability.
                                     </div>
-                                    <p class="text-xs text-gray-500 mt-2"><a href="{{ route('member.register') }}" class="text-[#991B1B] hover:underline font-semibold">Become a member</a> to choose your table.</p>
+                                    <p class="text-xs text-gray-500 mt-2"><a href="{{ route('member.register') }}" class="text-[#991B1B] hover:underline font-semibold">Daftar sebagai member</a> untuk memilih meja.</p>
                                 </div>
                             @endif
                         </div>
@@ -257,7 +257,7 @@
                         </div>
 
                         <div class="flex items-center justify-between pt-6 border-t border-gray-100">
-                            <p class="text-sm text-gray-500 hidden sm:block">Please verify your details before submitting.</p>
+                            <p class="text-sm text-gray-500 hidden sm:block">Periksa kembali detail Anda sebelum mengirim.</p>
                             <button type="submit" class="w-full sm:w-auto px-8 py-3.5 bg-[#991B1B] text-white rounded-xl hover:bg-[#8B121A] font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
                                 Confirm Reservation
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>

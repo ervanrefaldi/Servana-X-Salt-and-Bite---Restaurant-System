@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Our Menu - Servana</title>
+    <title>Menu Kami - SERVANA</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
@@ -22,7 +22,7 @@
 
             <div class="text-center mb-12 max-w-2xl mx-auto">
                 <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight mb-4">
-                    Explore Our <span class="text-[#991B1B]">Exquisite Menu</span>
+                    Jelajahi <span class="text-[#991B1B]">Menu Istimewa Kami</span>
                 </h1>
                 <p class="text-lg text-gray-600">
                     Discover a culinary journey crafted with passion, using only the finest ingredients to delight your senses.
@@ -55,10 +55,10 @@
 
                         <!-- Image Container -->
                         <div class="relative w-full h-56 bg-gray-100 overflow-hidden">
-                            @if ($menu->image)
-                                <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            @if ($menu->has_image)
+                                <img src="{{ $menu->image_url }}" alt="{{ $menu->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             @else
-                                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop" alt="Placeholder" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <img src="{{ asset('images/logo/servana-logo.png') }}" alt="Gambar {{ $menu->name }} belum tersedia" class="w-full h-full object-contain p-8 bg-white">
                             @endif
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
@@ -81,7 +81,7 @@
 
                             <div class="pt-4 border-t border-gray-100 flex items-center justify-between mt-auto">
                                 <div class="flex flex-col">
-                                    <span class="text-xs text-gray-400 font-medium uppercase tracking-wider">Price</span>
+                                    <span class="text-xs text-gray-400 font-medium uppercase tracking-wider">Harga</span>
                                     <span class="text-2xl font-black text-[#991B1B]">
                                         Rp{{ number_format($menu->price, 0, ',', '.') }}
                                     </span>
@@ -94,8 +94,8 @@
                         <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">No Menu Items Available</h3>
-                        <p class="text-gray-500">We are currently updating our menu. Please check back later.</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Belum Ada Menu Tersedia</h3>
+                        <p class="text-gray-500">Kami sedang memperbarui menu. Silakan periksa kembali nanti.</p>
                     </div>
                 @endforelse
             </div>

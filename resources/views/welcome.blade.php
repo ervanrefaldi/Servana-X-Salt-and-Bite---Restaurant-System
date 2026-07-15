@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servana - Fine Dining</title>
+    <title>SERVANA - Sistem Manajemen Restoran</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -25,12 +25,12 @@
             <div class="w-full">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#fde8e8] text-red-doff text-xs font-semibold mb-4 md:mb-6">
                     <span class="w-1.5 h-1.5 rounded-full bg-red-doff"></span>
-                    Now taking reservations for Spring
+                    Reservasi restoran kini tersedia
                 </div>
                 
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-gray-900 leading-[1.1] mb-4 md:mb-6">
-                    Sistem manajemen restoran <br class="hidden sm:block">
-                    <span class="text-red-doff italic">terintegrasi.</span>
+                    Sistem Manajemen Restoran <br class="hidden sm:block">
+                    <span class="text-red-doff italic">Terintegrasi</span>
                 </h1>
                 
                 <p class="text-base md:text-lg text-gray-600 mb-6 md:mb-8 max-w-lg leading-relaxed">
@@ -39,21 +39,17 @@
                 
                 <div class="flex flex-wrap gap-3 md:gap-4">
                     <a href="{{ route('reservations.create') }}" class="px-6 md:px-8 py-3 bg-red-doff text-white rounded-md font-medium hover:bg-[#7f1616] transition-colors shadow-sm text-sm md:text-base w-full sm:w-auto text-center">
-                        Reserve Now
+                        Reservasi Sekarang
                     </a>
                     <a href="{{ route('public.menu') }}" class="px-6 md:px-8 py-3 bg-white text-gray-800 border border-gray-300 rounded-md font-medium hover:border-gray-400 transition-colors shadow-sm text-sm md:text-base w-full sm:w-auto text-center">
-                        View Menus
+                        Lihat Menu
                     </a>
                 </div>
             </div>
             
             <div class="w-full relative mt-8 lg:mt-0">
-                <div class="rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] relative">
-                    @if(isset($heroMenu) && $heroMenu->image)
-                        <img src="{{ asset('storage/' . $heroMenu->image) }}" alt="{{ $heroMenu->name }}" class="w-full h-full object-cover">
-                    @else
-                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1200&q=80" alt="Exquisite Burger" class="w-full h-full object-cover">
-                    @endif
+                <div class="rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] relative bg-white p-8 sm:p-12 lg:p-16 flex items-center justify-center">
+                    <x-servana-logo variant="full" class="w-full h-full max-h-72 object-contain" />
                 </div>
                 <!-- Floating Badge -->
                 <div class="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-white p-3 md:p-4 rounded-xl shadow-xl flex items-center gap-3 md:gap-4 scale-90 md:scale-100 origin-bottom-left">
@@ -61,8 +57,8 @@
                         <svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                     </div>
                     <div>
-                        <p class="text-[10px] md:text-xs text-gray-500 font-medium">Ervan Refaldi</p>
-                        <p class="font-bold text-gray-900 text-sm md:text-base">Featured 2024</p>
+                        <p class="text-[10px] md:text-xs text-gray-500 font-medium">SERVANA</p>
+                        <p class="font-bold text-gray-900 text-sm md:text-base">2026</p>
                     </div>
                 </div>
             </div>
@@ -71,25 +67,25 @@
 
     {{-- A Taste of Perfection --}}
     <section class="max-w-7xl mx-auto px-6 py-20 text-center">
-        <h2 class="text-3xl font-serif font-bold text-gray-900 mb-4">A Taste of Perfection</h2>
-        <p class="text-gray-600 max-w-2xl mx-auto mb-12">Our menu is a living document, adapting to the micro-seasons and highlighting the purest ingredients available.</p>
+        <h2 class="text-3xl font-serif font-bold text-gray-900 mb-4">Cita Rasa Terbaik</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto mb-12">Nikmati pilihan hidangan berkualitas yang disiapkan dengan bahan-bahan terbaik.</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
             @foreach($featuredMenus as $menu)
             <!-- Item -->
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div class="aspect-square rounded-xl overflow-hidden mb-4 bg-gray-100">
-                    @if ($menu->image)
-                        <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" class="w-full h-full object-cover">
+                    @if ($menu->has_image)
+                        <img src="{{ $menu->image_url }}" alt="{{ $menu->name }}" class="w-full h-full object-cover">
                     @else
-                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop" alt="{{ $menu->name }}" class="w-full h-full object-cover">
+                        <img src="{{ asset('images/logo/servana-logo.png') }}" alt="Gambar {{ $menu->name }} belum tersedia" class="w-full h-full object-contain p-8 bg-white">
                     @endif
                 </div>
                 <div class="flex justify-between items-start mb-2">
                     <h4 class="font-bold text-gray-900 line-clamp-1" title="{{ $menu->name }}">{{ $menu->name }}</h4>
                     <span class="text-red-doff font-semibold">Rp{{ number_format($menu->price, 0, ',', '.') }}</span>
                 </div>
-                <p class="text-sm text-gray-500 line-clamp-2">{{ $menu->description ?: 'Delicious culinary creation prepared with the finest ingredients.' }}</p>
+                <p class="text-sm text-gray-500 line-clamp-2">{{ $menu->description ?: 'Hidangan lezat yang disiapkan dengan bahan-bahan terbaik.' }}</p>
             </div>
             @endforeach
 
@@ -98,9 +94,9 @@
                 <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-red-doff shadow-sm mb-4 group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                 </div>
-                <h4 class="font-bold text-gray-900 mb-2">Explore the Full Menu</h4>
-                <p class="text-sm text-gray-500 mb-6">Discover our seasonal offerings and extensive menu options.</p>
-                <span class="text-xs font-bold text-red-doff tracking-wider uppercase">View Menu</span>
+                <h4 class="font-bold text-gray-900 mb-2">Jelajahi Menu Lengkap</h4>
+                <p class="text-sm text-gray-500 mb-6">Temukan berbagai pilihan menu terbaik yang tersedia di SERVANA.</p>
+                <span class="text-xs font-bold text-red-doff tracking-wider uppercase">Lihat Menu</span>
             </a>
         </div>
     </section>
@@ -113,11 +109,11 @@
                     <div class="mb-4 inline-flex rounded-lg bg-white p-2">
                         <x-servana-logo variant="compact" :href="url('/')" class="h-16 w-auto max-w-40" />
                     </div>
-                    <p class="text-gray-400 text-sm">Redefining modern hospitality with precision, passion, and elegance.</p>
+                    <p class="text-gray-400 text-sm">Menghadirkan layanan restoran modern yang terintegrasi, efisien, dan tertata.</p>
                 </div>
                 
                 <div>
-                    <h4 class="font-bold mb-4">Location</h4>
+                    <h4 class="font-bold mb-4">Lokasi</h4>
                     <p class="text-gray-400 text-sm leading-relaxed">
                         123 Culinary Boulevard<br>
                         Metropolis, NY 10012<br>
@@ -126,17 +122,17 @@
                 </div>
 
                 <div>
-                    <h4 class="font-bold mb-4">Hours</h4>
+                    <h4 class="font-bold mb-4">Jam Operasional</h4>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        Tue - Thu: 5pm - 10pm<br>
-                        Fri - Sat: 5pm - 11pm<br>
-                        Sun: 4pm - 9pm<br>
-                        Mon: Closed
+                        Selasa - Kamis: 17.00 - 22.00<br>
+                        Jumat - Sabtu: 17.00 - 23.00<br>
+                        Minggu: 16.00 - 21.00<br>
+                        Senin: Tutup
                     </p>
                 </div>
 
                 <div>
-                    <h4 class="font-bold mb-4">Connect</h4>
+                    <h4 class="font-bold mb-4">Terhubung</h4>
                     <div class="flex gap-4">
                         <a href="#" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
@@ -151,8 +147,8 @@
             <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
                 <p>© {{ date('Y') }} Servana Hospitality Group. All rights reserved.</p>
                 <div class="flex gap-4">
-                    <a href="#" class="hover:text-gray-300">Privacy Policy</a>
-                    <a href="#" class="hover:text-gray-300">Terms of Service</a>
+                    <a href="#" class="hover:text-gray-300">Kebijakan Privasi</a>
+                    <a href="#" class="hover:text-gray-300">Ketentuan Layanan</a>
                 </div>
             </div>
         </div>

@@ -7,8 +7,8 @@
     <!-- Page Header -->
     <div class="px-8 pt-8 pb-6 flex justify-between items-end border-b border-gray-100 shrink-0">
         <div>
-            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Order History</h2>
-            <p class="text-gray-500 text-sm">Review past transactions and order details.</p>
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Riwayat Pesanan</h2>
+            <p class="text-gray-500 text-sm">Tinjau transaksi terdahulu dan detail pesanan.</p>
         </div>
         <a href="{{ route('orders.create') }}" class="px-4 py-2 bg-brand-red text-white rounded-lg text-sm font-medium shadow-sm hover:bg-[#8B121A] transition-colors flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -32,7 +32,7 @@
                         <tr class="bg-gray-100 text-left">
                             <th class="p-4 border">No</th>
                             <th class="p-4 border">Kode Order</th>
-                            <th class="p-4 border">Customer</th>
+                            <th class="p-4 border">Pelanggan</th>
                             <th class="p-4 border">Member</th>
                             <th class="p-4 border">Total</th>
                             <th class="p-4 border">Metode Bayar</th>

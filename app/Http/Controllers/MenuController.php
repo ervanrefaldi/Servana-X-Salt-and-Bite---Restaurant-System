@@ -122,7 +122,7 @@ class MenuController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            if ($menu->image) {
+            if ($menu->image && !$menu->imageIsPublicAsset()) {
                 Storage::disk('public')->delete($menu->image);
             }
             $menuData['image'] = $request->file('image')->store('menus', 'public');
@@ -147,7 +147,7 @@ class MenuController extends Controller
 
     public function destroy(Menu $menu)
     {
-        if ($menu->image) {
+        if ($menu->image && !$menu->imageIsPublicAsset()) {
             Storage::disk('public')->delete($menu->image);
         }
 

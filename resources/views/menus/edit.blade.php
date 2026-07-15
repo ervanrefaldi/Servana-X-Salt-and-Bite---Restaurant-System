@@ -39,9 +39,9 @@
                         <label class="block mb-2 font-medium">
                             Foto Menu
                         </label>
-                        @if($menu->image)
+                        @if($menu->has_image)
                             <div class="mb-2">
-                                <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" class="w-32 h-32 object-cover rounded-md shadow-sm">
+                                <img src="{{ $menu->image_url }}" alt="{{ $menu->name }}" class="w-32 h-32 object-cover rounded-md shadow-sm">
                             </div>
                         @endif
                         <input type="file"

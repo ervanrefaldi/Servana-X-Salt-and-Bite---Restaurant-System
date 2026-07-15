@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Menu extends Model
 {
@@ -21,6 +23,33 @@ class Menu extends Model
         'stock' => 'integer',
         'is_available' => 'boolean',
     ];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        return $this->imageIsPublicAsset()
+            ? asset($this->image)
+            : Storage::disk('public')->url($this->image);
+    }
+
+    public function getHasImageAttribute(): bool
+    {
+        if (!$this->image) {
+            return false;
+        }
+
+        return $this->imageIsPublicAsset()
+            ? file_exists(public_path($this->image))
+            : Storage::disk('public')->exists($this->image);
+    }
+
+    public function imageIsPublicAsset(): bool
+    {
+        return Str::startsWith($this->image ?? '', 'images/');
+    }
 
     public function orderDetails()
     {

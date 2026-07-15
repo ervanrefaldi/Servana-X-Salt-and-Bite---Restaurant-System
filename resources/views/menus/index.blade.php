@@ -50,10 +50,10 @@
                                 </td>
 
                                 <td class="p-4 border text-center">
-                                    @if($menu->image)
-                                        <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" class="w-12 h-12 object-cover rounded mx-auto">
+                                    @if($menu->has_image)
+                                        <img src="{{ $menu->image_url }}" alt="{{ $menu->name }}" class="w-16 h-16 object-cover rounded-lg mx-auto">
                                     @else
-                                        <span class="text-gray-400 text-xs">No Image</span>
+                                        <span class="text-gray-400 text-xs">Gambar Belum Tersedia</span>
                                     @endif
                                 </td>
 
