@@ -10,11 +10,11 @@
         
         <!-- Categories -->
         <div class="px-8 py-6 flex gap-3 overflow-x-auto shrink-0 hide-scrollbar">
-            <button class="px-6 py-2 bg-brand-red text-white rounded-full text-sm font-semibold shrink-0">All Items</button>
-            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Starters</button>
-            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Mains</button>
-            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Desserts</button>
-            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Beverages</button>
+            <button class="px-6 py-2 bg-brand-red text-white rounded-full text-sm font-semibold shrink-0">Semua Menu</button>
+            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Hidangan Pembuka</button>
+            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Hidangan Utama</button>
+            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Hidangan Penutup</button>
+            <button class="px-6 py-2 bg-white text-gray-600 border border-gray-200 rounded-full text-sm font-semibold hover:border-gray-300 shrink-0">Minuman</button>
         </div>
 
         @if (session('success'))
@@ -44,13 +44,17 @@
                     
                     <!-- Image -->
                     <div class="aspect-video w-full rounded-xl bg-gray-100 mb-4 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=500&auto=format&fit=crop" alt="{{ $menu->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        @if ($menu->has_image)
+                            <img src="{{ $menu->image_url }}" alt="{{ $menu->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        @else
+                            <img src="{{ asset('images/logo/servana-logo.png') }}" alt="Gambar {{ $menu->name }} belum tersedia" class="w-full h-full object-contain p-6 bg-white">
+                        @endif
                     </div>
 
                     <!-- Details -->
                     <div class="flex-1 px-1">
                         <h3 class="font-bold text-gray-900 mb-1 leading-tight">{{ $menu->name }}</h3>
-                        <p class="text-xs text-gray-500 line-clamp-2">{{ $menu->category }} - {{ $menu->stock > 0 ? 'Stock: ' . $menu->stock : 'Out of Stock' }}</p>
+                        <p class="text-xs text-gray-500 line-clamp-2">{{ $menu->category }} - {{ $menu->stock > 0 ? 'Stok: ' . $menu->stock : 'Stok Habis' }}</p>
                     </div>
 
                     <!-- Action -->
@@ -92,12 +96,12 @@
             
             <div class="p-6 border-b border-gray-100">
                 <div class="flex justify-between items-start mb-2">
-                    <h2 class="text-2xl font-bold text-gray-900">Current Order</h2>
+                    <h2 class="text-2xl font-bold text-gray-900">Pesanan Saat Ini</h2>
                     <button type="button" class="text-gray-400 hover:text-gray-600">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
                     </button>
                 </div>
-                <p class="text-sm text-gray-500">Takeaway / Dine-In</p>
+                <p class="text-sm text-gray-500">Bawa Pulang / Makan di Tempat</p>
             </div>
 
             <!-- Cart Items -->
@@ -119,12 +123,12 @@
 
                 <div class="flex gap-2 mb-4">
                     <select name="customer_type" id="customer_type" class="w-1/3 border-gray-200 rounded-lg text-sm focus:ring-brand-red focus:border-brand-red" required>
-                        <option value="non_member">Regular</option>
+                        <option value="non_member">Reguler</option>
                         <option value="member">Member</option>
                     </select>
                     <input type="text" name="member_code" id="member_code" class="flex-1 border-gray-200 rounded-lg text-sm focus:ring-brand-red focus:border-brand-red bg-white" placeholder="Member ID or Promo" style="display: none;">
                     <select name="payment_method" id="payment_method" class="flex-1 border-gray-200 rounded-lg text-sm focus:ring-brand-red focus:border-brand-red" required>
-                        <option value="cash">Cash</option>
+                        <option value="cash">Tunai</option>
                         <option value="debit">Debit</option>
                         <option value="qris">QRIS</option>
                         <option value="transfer">Transfer</option>
@@ -141,12 +145,12 @@
                         <span id="summary_subtotal">Rp0</span>
                     </div>
                     <div class="flex justify-between text-brand-red">
-                        <span>Member Discount (5%)</span>
+                        <span>Diskon Member (5%)</span>
                         <span id="summary_discount">-Rp0</span>
                     </div>
                     <!-- Assuming Tax is included or 0, showing it statically for design parity -->
                     <div class="flex justify-between text-gray-500">
-                        <span>Tax (0%)</span>
+                        <span>Pajak (0%)</span>
                         <span>Rp0</span>
                     </div>
                 </div>

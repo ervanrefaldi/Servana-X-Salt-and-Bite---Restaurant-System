@@ -7,8 +7,8 @@
     <!-- Page Header -->
     <div class="px-8 pt-8 pb-6 flex justify-between items-end border-b border-gray-100 shrink-0">
         <div>
-            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">New Manual Record</h2>
-            <p class="text-gray-500 text-sm">Add manual income or expense transactions.</p>
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Tambah Transaksi Manual</h2>
+            <p class="text-gray-500 text-sm">Tambahkan transaksi pemasukan atau pengeluaran manual.</p>
         </div>
         <div class="flex gap-3">
             <a href="{{ route('financial-transactions.index') }}" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium shadow-sm hover:bg-gray-50 transition-colors flex items-center gap-2">

@@ -1,11 +1,11 @@
 <x-guest-layout>
     <div class="mb-4 text-center">
         <h2 class="text-xl font-semibold text-gray-800">
-            Lupa Password
+            Lupa Kata Sandi
         </h2>
 
         <p class="text-sm text-gray-600 mt-2">
-            Masukkan email akun Anda. Sistem akan mengirimkan kode reset password ke email tersebut.
+            Masukkan email akun Anda. Sistem akan mengirimkan kode atur ulang kata sandi ke email tersebut.
         </p>
     </div>
 
@@ -51,7 +51,7 @@
         <div class="flex items-center justify-between mt-4">
             <a href="{{ route('login') }}"
                class="underline text-sm text-gray-600 hover:text-gray-900">
-                Kembali ke Login
+                Kembali ke Masuk
             </a>
 
             <x-primary-button>

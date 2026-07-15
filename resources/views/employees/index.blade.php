@@ -7,12 +7,12 @@
     <!-- Page Header -->
     <div class="px-8 pt-8 pb-6 flex justify-between items-end border-b border-gray-100 shrink-0">
         <div>
-            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Employee Directory</h2>
-            <p class="text-gray-500 text-sm">Manage staff profiles, positions, and employment status.</p>
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Data Karyawan</h2>
+            <p class="text-gray-500 text-sm">Kelola profil, posisi, dan status kerja staf.</p>
         </div>
         <a href="{{ route('employees.create') }}" class="px-4 py-2 bg-brand-red text-white rounded-lg text-sm font-medium shadow-sm hover:bg-[#8B121A] transition-colors flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Add Employee
+            Tambah Karyawan
         </a>
     </div>
 
@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                    <p class="text-sm text-gray-500">Resign</p>
+                    <p class="text-sm text-gray-500">Mengundurkan Diri</p>
                     <h3 class="text-2xl font-bold text-red-600">{{ $resignedEmployees ?? 0 }}</h3>
                 </div>
             </div>

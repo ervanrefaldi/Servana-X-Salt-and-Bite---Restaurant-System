@@ -7,8 +7,8 @@
     <!-- Page Header -->
     <div class="px-8 pt-8 pb-6 flex justify-between items-end border-b border-gray-100 shrink-0">
         <div>
-            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">New Stock Request</h2>
-            <p class="text-gray-500 text-sm">Add or deduct stock for an ingredient.</p>
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Permintaan Stok Baru</h2>
+            <p class="text-gray-500 text-sm">Tambah atau kurangi stok suatu bahan.</p>
         </div>
         <div class="flex gap-3">
             <a href="{{ route('stock-transactions.index') }}" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium shadow-sm hover:bg-gray-50 transition-colors flex items-center gap-2">

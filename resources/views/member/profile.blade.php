@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Member Profile - Servana</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.favicon')
 </head>
 
 <body class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-[#991B1B] selection:text-white">
@@ -201,7 +202,7 @@
                             <div class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-900">Order History</h3>
+                            <h3 class="text-xl font-bold text-gray-900">Riwayat Pesanan</h3>
                         </div>
 
                         <div class="overflow-x-auto rounded-xl border border-gray-100">

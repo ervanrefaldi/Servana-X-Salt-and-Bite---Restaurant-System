@@ -4,7 +4,7 @@
 
     <div class="mb-6 text-center">
         <h2 class="text-2xl font-bold text-gray-800">
-            Login Servana
+            Masuk ke SERVANA
         </h2>
         <p class="text-sm text-gray-600 mt-2">
             Masuk sesuai akun dan role Anda.
@@ -26,7 +26,7 @@
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Kata Sandi')" />
 
             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
                 autocomplete="current-password" />
@@ -41,7 +41,7 @@
                     class="rounded border-gray-300 text-[#a01a1d] shadow-sm focus:ring-[#a01a1d]" name="remember">
 
                 <span class="ms-2 text-sm text-gray-600">
-                    Remember me
+                    Ingat saya
                 </span>
             </label>
         </div>
@@ -51,12 +51,12 @@
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md"
                     href="{{ route('password.request') }}">
-                    Forgot your password?
+                    Lupa kata sandi?
                 </a>
             @endif
 
             <x-primary-button>
-                LOG IN
+                MASUK
             </x-primary-button>
         </div>
     </form>

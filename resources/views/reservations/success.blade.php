@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Reservasi Berhasil - Servana</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.favicon')
 </head>
 
 <body class="bg-gray-100 text-gray-900">
